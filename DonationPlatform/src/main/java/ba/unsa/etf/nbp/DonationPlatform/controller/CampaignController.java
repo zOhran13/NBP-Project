@@ -3,9 +3,8 @@ package ba.unsa.etf.nbp.DonationPlatform.controller;
 
 import ba.unsa.etf.nbp.DonationPlatform.model.Campaign;
 import ba.unsa.etf.nbp.DonationPlatform.service.CampaignService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -22,5 +21,10 @@ public class CampaignController {
     @GetMapping
     public List<Campaign> getAllCampaigns() {
         return campaignService.getAllCampaigns();
+    }
+
+    @PostMapping
+    public ResponseEntity<Campaign> createCampaign(@RequestBody Campaign campaign) {
+        return ResponseEntity.ok(campaignService.createCampaign(campaign));
     }
 }

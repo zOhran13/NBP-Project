@@ -17,4 +17,8 @@ public class CampaignService {
     public List<Campaign> getAllCampaigns() {
         return campaignRepository.findAll();
     }
+
+    public Campaign createCampaign(Campaign campaign) {
+        return campaignRepository.save(campaign);
+    }
 }
