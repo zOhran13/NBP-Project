@@ -20,7 +20,7 @@ public class EventParticipation {
     private Event event;
 
     @ManyToOne
-    @JoinColumn(name = "event_id", referencedColumnName = "id")
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
 }
