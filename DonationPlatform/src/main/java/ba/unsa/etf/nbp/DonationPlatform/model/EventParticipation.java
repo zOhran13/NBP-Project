@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Entity
 @Data
-@Table(name="event_participation")
+@Table(name="event_participation",schema = "NBP03")
 public class EventParticipation {
 
     @Id
@@ -21,6 +21,6 @@ public class EventParticipation {
 
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private User user;
+    private NbpUser user;
 
 }

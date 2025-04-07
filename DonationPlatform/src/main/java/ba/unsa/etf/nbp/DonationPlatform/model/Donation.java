@@ -8,7 +8,7 @@ import java.util.Date;
 
 @Entity
 @Data
-@Table(name="donation")
+@Table(name="donation",schema = "NBP03")
 public class Donation {
 
     @Id
@@ -16,11 +16,11 @@ public class Donation {
     private Long id;
 
     private Double amount;
-    private Date date;
+    private Date donationDate;
 
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private User user;
+    private NbpUser user;
 
     @ManyToOne
     @JoinColumn(name = "campaign_id", referencedColumnName = "id")

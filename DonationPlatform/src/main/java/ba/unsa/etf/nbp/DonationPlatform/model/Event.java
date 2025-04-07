@@ -7,7 +7,7 @@ import java.util.Date;
 
 @Entity
 @Data
-@Table(name="event")
+@Table(name="event",schema = "NBP03")
 public class Event {
 
     @Id
@@ -15,7 +15,7 @@ public class Event {
     private Long id;
 
     private String title;
-    private Date date;
+    private Date eventDate;
     private String location;
     private String description;
     private Long volunteerGoal;

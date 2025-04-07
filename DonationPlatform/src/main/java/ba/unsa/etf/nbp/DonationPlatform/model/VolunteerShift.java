@@ -8,7 +8,7 @@ import java.time.LocalTime;
 
 @Entity
 @Data
-@Table(name="volunteer_shift")
+@Table(name="volunteer_shift",schema = "NBP03")
 public class VolunteerShift {
 
     @Id
@@ -21,7 +21,7 @@ public class VolunteerShift {
 
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private User user;
+    private NbpUser user;
 
     @ManyToOne
     @JoinColumn(name = "event_id", referencedColumnName = "id")
