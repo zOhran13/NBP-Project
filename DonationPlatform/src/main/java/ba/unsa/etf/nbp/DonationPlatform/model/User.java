@@ -1,14 +1,12 @@
 package ba.unsa.etf.nbp.DonationPlatform.model;
 
 import jakarta.persistence.*;
-import lombok.Data;
 
 import java.time.LocalDate;
 
 @Entity
-@Data
-@Table( name = "app_user" , schema = "NBP03")
-public class NbpUser {
+@Table(name = "app_user", schema = "NBP03")
+public class User {
 
     @Id
     private Long id;
@@ -41,5 +39,5 @@ public class NbpUser {
 
     @OneToOne
     @JoinColumn(name = "ROLE_ID", referencedColumnName = "ID", nullable = false)
-    private NbpRole role;
+    private Role role;
 }

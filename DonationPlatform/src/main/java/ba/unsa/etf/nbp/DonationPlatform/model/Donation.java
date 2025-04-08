@@ -20,7 +20,7 @@ public class Donation {
 
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private NbpUser user;
+    private User user;
 
     @ManyToOne
     @JoinColumn(name = "campaign_id", referencedColumnName = "id")

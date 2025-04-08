@@ -21,6 +21,6 @@ public class EventParticipation {
 
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private NbpUser user;
+    private User user;
 
 }

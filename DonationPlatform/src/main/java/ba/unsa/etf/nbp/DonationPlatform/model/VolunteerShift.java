@@ -21,7 +21,7 @@ public class VolunteerShift {
 
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private NbpUser user;
+    private User user;
 
     @ManyToOne
     @JoinColumn(name = "event_id", referencedColumnName = "id")
