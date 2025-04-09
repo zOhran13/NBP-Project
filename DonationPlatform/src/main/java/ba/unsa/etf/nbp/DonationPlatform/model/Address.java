@@ -3,6 +3,7 @@ package ba.unsa.etf.nbp.DonationPlatform.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
 
 @Entity
 @Data
@@ -13,13 +14,11 @@ public class Address {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Getter
     private String street;
     private String city;
     private Long postalCode;
     private String country;
 
 
-    public String getStreet() {
-        return street;
-    }
 }

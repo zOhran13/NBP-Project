@@ -26,7 +26,7 @@ public class RoleService {
                 .collect(Collectors.toList());
     }
 
-    public Optional<RoleDTO> getRoleById(Long id) {
+    public Optional<RoleDTO> getById(Long id) {
         return roleRepository.findById(id).map(this::convertToDTO);
     }
 

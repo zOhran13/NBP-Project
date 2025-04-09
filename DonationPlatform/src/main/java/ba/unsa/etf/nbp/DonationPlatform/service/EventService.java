@@ -5,6 +5,7 @@ import ba.unsa.etf.nbp.DonationPlatform.repository.EventRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class EventService {
@@ -20,5 +21,29 @@ public class EventService {
 
     public Event createEvent(Event event) {
         return eventRepository.save(event);
+    }
+
+    public Optional<Event> getEventById(Long id) {
+        return eventRepository.findById(id);
+    }
+
+    public Event updateEvent(Long id, Event eventDetails) {
+        Event existing = eventRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Event not found"));
+
+        existing.setTitle(eventDetails.getTitle());
+        existing.setEventDate(eventDetails.getEventDate());
+        existing.setLocation(eventDetails.getLocation());
+        existing.setDescription(eventDetails.getDescription());
+        existing.setVolunteerGoal(eventDetails.getVolunteerGoal());
+        existing.setDonationGoal(eventDetails.getDonationGoal());
+
+        return eventRepository.save(existing);
+    }
+
+    public void deleteEvent(Long id) {
+        Event event = eventRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Event not found"));
+        eventRepository.delete(event);
     }
 }

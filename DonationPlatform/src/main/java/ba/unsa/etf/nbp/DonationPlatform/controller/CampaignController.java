@@ -23,8 +23,36 @@ public class CampaignController {
         return campaignService.getAllCampaigns();
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<Campaign> getCampaignById(@PathVariable Long id) {
+        return campaignService.getCampaignById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
     @PostMapping
     public ResponseEntity<Campaign> createCampaign(@RequestBody Campaign campaign) {
-        return ResponseEntity.ok(campaignService.createCampaign(campaign));
+        Campaign created = campaignService.createCampaign(campaign);
+        return ResponseEntity.ok(created);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Campaign> updateCampaign(@PathVariable Long id, @RequestBody Campaign campaign) {
+        try {
+            Campaign updated = campaignService.updateCampaign(id, campaign);
+            return ResponseEntity.ok(updated);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteCampaign(@PathVariable Long id) {
+        try {
+            campaignService.deleteCampaign(id);
+            return ResponseEntity.noContent().build();
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 }

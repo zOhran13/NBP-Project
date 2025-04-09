@@ -25,4 +25,26 @@ public class DonationController {
     public List<Donation> getUserDonations(@PathVariable Long userId) {
         return donationService.getUserDonations(userId);
     }
+
+    // UPDATE donation
+    @PutMapping("/{id}")
+    public ResponseEntity<Donation> updateDonation(@PathVariable Long id, @RequestBody Donation donation) {
+        try {
+            Donation updated = donationService.updateDonation(id, donation);
+            return ResponseEntity.ok(updated);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    // DELETE donation
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteDonation(@PathVariable Long id) {
+        try {
+            donationService.deleteDonation(id);
+            return ResponseEntity.noContent().build();
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }

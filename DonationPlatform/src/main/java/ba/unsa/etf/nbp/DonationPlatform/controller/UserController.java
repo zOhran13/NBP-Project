@@ -2,6 +2,7 @@ package ba.unsa.etf.nbp.DonationPlatform.controller;
 
 import ba.unsa.etf.nbp.DonationPlatform.model.User;
 import ba.unsa.etf.nbp.DonationPlatform.dto.UserDTO;
+import ba.unsa.etf.nbp.DonationPlatform.request.RegisterUserRequest;
 import ba.unsa.etf.nbp.DonationPlatform.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +28,15 @@ public class UserController {
         return userService.getUserByUsername(username)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
+    }
+    @PostMapping("/register")
+    public ResponseEntity<?> registerUser(@RequestBody RegisterUserRequest user) {
+        try {
+            User saved = userService.registerUser(user);
+            return ResponseEntity.ok(saved);
+        } catch (RuntimeException ex) {
+            return ResponseEntity.badRequest().body(ex.getMessage());
+        }
     }
 
 }
