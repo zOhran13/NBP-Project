@@ -1,18 +1,12 @@
 package ba.unsa.etf.nbp.DonationPlatform.repository;
 
-import org.springframework.jdbc.core.JdbcTemplate;
+import ba.unsa.etf.nbp.DonationPlatform.model.User;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-@Repository
-public class UserRepository {
-    private static final String TABLE_NAME = "nbp.nbp_user";
+import java.util.Optional;
 
-    private final JdbcTemplate jdbcTemplate;
-    public UserRepository (JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
-    // SQL queries as formatted strings
-    private String getSelectQuery() {
-        return String.format("SELECT * FROM %s", TABLE_NAME);
-    }
+@Repository
+public interface UserRepository extends JpaRepository<User, Long> {
+    Optional<User> findByUsername(String username);
 }

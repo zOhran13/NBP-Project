@@ -19,4 +19,7 @@ public class Address {
     private String country;
 
 
+    public String getStreet() {
+        return street;
+    }
 }

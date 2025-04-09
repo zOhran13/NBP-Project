@@ -1,15 +1,12 @@
 package ba.unsa.etf.nbp.DonationPlatform.repository;
 
-import org.springframework.jdbc.core.JdbcTemplate;
+import ba.unsa.etf.nbp.DonationPlatform.model.Role;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
-public class RoleRepository {
-    private static final String TABLE_NAME = "nbp.nbp_role";
-
-    private final JdbcTemplate jdbcTemplate;
-
-    public RoleRepository(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
+public interface RoleRepository extends JpaRepository<Role, Long> {
+    Optional<Role> findByName(String name);
 }
