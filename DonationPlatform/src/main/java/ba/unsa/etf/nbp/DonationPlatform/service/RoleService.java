@@ -42,7 +42,6 @@ public class RoleService {
         roleRepository.deleteById(id);
     }
 
-    // Convert Role to RoleDTO
     private RoleDTO convertToDTO(Role role) {
         return new RoleDTO(role.getId(), role.getName());
     }

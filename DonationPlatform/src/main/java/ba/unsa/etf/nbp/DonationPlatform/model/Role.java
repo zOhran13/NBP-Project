@@ -2,16 +2,23 @@ package ba.unsa.etf.nbp.DonationPlatform.model;
 
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+@Setter
+@Getter
 @Entity
 @Table(name = "NBP_ROLE", schema = "NBP")
 public class Role {
 
+    // Getters and Setters
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "NBP_ROLE_id_gen")
+    @SequenceGenerator(name = "NBP_ROLE_id_gen", sequenceName = "NBP_ROLE_ID_SEQ", allocationSize = 1)
     private Long id;
 
     private String name;
@@ -19,42 +26,11 @@ public class Role {
     @OneToMany(mappedBy = "role")
     private Set<User> nbpUsers = new LinkedHashSet<>();
 
-    public Set<User> getNbpUsers() {
-        return nbpUsers;
-    }
-
-    public void setNbpUsers(Set<User> nbpUsers) {
-        this.nbpUsers = nbpUsers;
-    }
-
-
-    // Default constructor
     public Role() {}
 
-    // Constructor
-    public Role(Long id, String name) {
-        this.id = id;
+    public Role(String name) {
         this.name = name;
     }
-
-    // Getters and Setters
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-
 
 }
 

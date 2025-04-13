@@ -15,9 +15,21 @@ public class Campaign {
     private Long id;
 
     private String name;
+    private String imageLink;
     private Date startDate;
     private Date endDate;
     private Double targetAmount;
 
 
+    public Campaign(String name, String imageLink, Date startDate, Date endDate, Double targetAmount) {
+        this.name = name;
+        this.imageLink = imageLink;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.targetAmount = targetAmount;
+    }
+
+    public Campaign() {
+
+    }
 }

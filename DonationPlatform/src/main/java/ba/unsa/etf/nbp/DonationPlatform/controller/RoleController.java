@@ -46,7 +46,7 @@ public class RoleController {
     @PostMapping
     public ResponseEntity<RoleDTO> createRole(@RequestBody RoleDTO roleDTO) {
         // You can modify this to convert RoleDTO to Role if needed
-        Role role = new Role(roleDTO.getId(), roleDTO.getName());
+        Role role = new Role(roleDTO.getName());
         Role savedRole = roleService.createRole(role);
         return new ResponseEntity<>(new RoleDTO(savedRole.getId(), savedRole.getName()), HttpStatus.CREATED);
     }
