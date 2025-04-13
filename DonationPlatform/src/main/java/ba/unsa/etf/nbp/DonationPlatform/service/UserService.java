@@ -42,7 +42,11 @@ public class UserService {
                         user.getUsername(),
                         user.getEmail(),
                         user.getRole().getName(),
-                        user.getAddress() != null ? user.getAddress().getStreet() : "No address"
+                        user.getAddressId() != null
+                                ? addressRepository.findById(user.getAddressId())
+                                .map(Address::getStreet)
+                                .orElse("No address")
+                                : "No address"
 
 
                 ))
@@ -56,7 +60,11 @@ public class UserService {
                         user.getUsername(),
                         user.getEmail(),
                         user.getRole().getName(),
-                        user.getAddress() != null ? user.getAddress().getStreet() : "No address"
+                        user.getAddressId() != null
+                                ? addressRepository.findById(user.getAddressId())
+                                .map(Address::getStreet)
+                                .orElse("No address")
+                                : "No address"
                 ));
     }
 
@@ -73,8 +81,23 @@ public class UserService {
 
         Role role = roleRepository.findById(request.getRoleId()).orElseThrow(() -> new RuntimeException("Role Id is not valid."));
 
-        User user = new User(request.getFirstName(), request.getLastName(), request.getEmail(), request.getUsername(), passwordEncoder.encode(request.getPassword()), request.getPhoneNumber(), request.getBirthDate(), address, role);
+        User user = new User();
 
+        user.setFirstName(request.getFirstName());
+        user.setLastName(request.getLastName());
+        user.setEmail(request.getEmail());
+        user.setUsername(request.getUsername());
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setPhoneNumber(request.getPhoneNumber());
+        user.setBirthDate(request.getBirthDate());
+
+// Address handling
+        String street = Optional.ofNullable(user.getAddressId())
+                .flatMap(addressRepository::findById)
+                .map(Address::getStreet)
+                .orElse("No address");
+
+        user.setRole(role);
         return userRepository.save(user);
     }
 }
