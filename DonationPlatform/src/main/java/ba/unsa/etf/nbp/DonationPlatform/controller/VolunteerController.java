@@ -1,7 +1,10 @@
 package ba.unsa.etf.nbp.DonationPlatform.controller;
 
+import ba.unsa.etf.nbp.DonationPlatform.dto.VolunteerShiftDTO;
 import ba.unsa.etf.nbp.DonationPlatform.model.VolunteerShift;
 import ba.unsa.etf.nbp.DonationPlatform.service.VolunteerService;
+import jakarta.persistence.EntityNotFoundException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,8 +20,18 @@ public class VolunteerController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<VolunteerShift> registerVolunteer(@RequestBody VolunteerShift shift) {
-        return ResponseEntity.ok(volunteerService.registerVolunteer(shift));
+    public ResponseEntity<?> registerVolunteer(@RequestBody VolunteerShiftDTO shiftDTO) {
+        try {
+            VolunteerShift registeredShift = volunteerService.registerVolunteer(shiftDTO);
+            return ResponseEntity.ok(registeredShift);
+        } catch (EntityNotFoundException ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+        } catch (IllegalArgumentException ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Došlo je do greške prilikom registracije volontera.");
+        }
     }
 
     @GetMapping("/user/{userId}/shifts")
