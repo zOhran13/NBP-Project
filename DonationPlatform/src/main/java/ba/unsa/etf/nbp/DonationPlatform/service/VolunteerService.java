@@ -2,6 +2,7 @@ package ba.unsa.etf.nbp.DonationPlatform.service;
 
 import ba.unsa.etf.nbp.DonationPlatform.dto.VolunteerShiftDTO;
 import ba.unsa.etf.nbp.DonationPlatform.enums.RoleName;
+import ba.unsa.etf.nbp.DonationPlatform.mapper.VolunteerShiftMapper;
 import ba.unsa.etf.nbp.DonationPlatform.model.Event;
 import ba.unsa.etf.nbp.DonationPlatform.model.Role;
 import ba.unsa.etf.nbp.DonationPlatform.model.User;
@@ -27,8 +28,18 @@ public class VolunteerService {
     private EventRepository eventRepository;
     @Autowired
     private RoleRepository roleRepository;
-    @Transactional
+
+    private final VolunteerShiftMapper vShiftMapper;
+
+    @Autowired
+    public VolunteerService(VolunteerShiftMapper mapper) {
+
+        this.vShiftMapper = mapper;
+    }
+
     public VolunteerShift registerVolunteer(VolunteerShiftDTO shiftDTO) {
+        Role newRole = roleRepository.findByName(RoleName.VOLONTER.name())
+                .orElseThrow(() -> new RuntimeException("Role not found"));
         User user = userRepository.findById(shiftDTO.getUserId())
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
         Event event = eventRepository.findById(shiftDTO.getEventId())
@@ -38,21 +49,22 @@ public class VolunteerService {
             throw new IllegalArgumentException("Start time and end time must be provided.");
         }
 
-        Role newRole = roleRepository.findByName(RoleName.VOLONTER.name())
-                .orElseThrow(() -> new RuntimeException("Role not found"));
-
         user.setRole(newRole);
         userRepository.save(user);
-        VolunteerShift shift = new VolunteerShift();
-        shift.setShiftStart(shiftDTO.getShiftStart());
-        shift.setShiftEnd(shiftDTO.getShiftEnd());
-        shift.setHoursWorked(shiftDTO.getHoursWorked());
-        shift.setUser(user);
-        shift.setEvent(event);
 
+        VolunteerShift shift = vShiftMapper.toEntity(shiftDTO, user, event);
         return volunteerRepository.save(shift);
     }
-
+    public VolunteerShiftDTO addHoursWorked(Long volunteerShiftId, int additionalHours) {
+        if (additionalHours < 0) {
+            throw new IllegalArgumentException("Additional hours cannot be negative.");
+        }
+        VolunteerShift shift = volunteerRepository.findById(volunteerShiftId)
+                .orElseThrow(() -> new EntityNotFoundException("Volunteer shift not found"));
+        shift.setHoursWorked(shift.getHoursWorked()+additionalHours);
+        volunteerRepository.save(shift);
+    return vShiftMapper.toDTO(shift);
+    }
     public List<VolunteerShift> getUserShifts(Long userId) {
         return volunteerRepository.findByUserId(userId);
     }
