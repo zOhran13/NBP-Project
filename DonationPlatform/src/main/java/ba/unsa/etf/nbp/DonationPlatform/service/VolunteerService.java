@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalTime;
 import java.util.List;
 
 @Service
@@ -48,6 +49,9 @@ public class VolunteerService {
         if (shiftDTO.getShiftStart() == null || shiftDTO.getShiftEnd() == null) {
             throw new IllegalArgumentException("Start time and end time must be provided.");
         }
+        if (shiftDTO.getShiftStart().isAfter(shiftDTO.getShiftEnd())) {
+            throw new IllegalArgumentException("Shift start time cannot be after end time.");
+        }
 
         user.setRole(newRole);
         userRepository.save(user);
@@ -64,6 +68,20 @@ public class VolunteerService {
         shift.setHoursWorked(shift.getHoursWorked()+additionalHours);
         volunteerRepository.save(shift);
     return vShiftMapper.toDTO(shift);
+    }
+
+    public VolunteerShiftDTO editShiftTime(Long shiftId, LocalTime shiftStart, LocalTime shiftEnd) {
+        if (shiftStart.isAfter(shiftEnd)) {
+            throw new IllegalArgumentException("Shift start time cannot be after end time.");
+        }
+
+        VolunteerShift shift = volunteerRepository.findById(shiftId)
+                .orElseThrow(() -> new EntityNotFoundException("Volunteer shift not found"));
+        shift.setShiftStart(shiftStart);
+        shift.setShiftEnd(shiftEnd);
+
+        volunteerRepository.save(shift);
+        return vShiftMapper.toDTO(shift);
     }
     public List<VolunteerShift> getUserShifts(Long userId) {
         return volunteerRepository.findByUserId(userId);
