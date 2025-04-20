@@ -23,7 +23,7 @@ public class VolunteerController {
     public ResponseEntity<?> registerVolunteer(@RequestBody VolunteerShiftDTO shiftDTO) {
         try {
             VolunteerShift registeredShift = volunteerService.registerVolunteer(shiftDTO);
-            return ResponseEntity.ok(registeredShift);
+            return ResponseEntity.ok(shiftDTO);
         } catch (EntityNotFoundException ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
         } catch (IllegalArgumentException ex) {
