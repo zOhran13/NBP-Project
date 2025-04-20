@@ -1,6 +1,6 @@
 package ba.unsa.etf.nbp.DonationPlatform.controller;
 
-import ba.unsa.etf.nbp.DonationPlatform.model.Donation;
+import ba.unsa.etf.nbp.DonationPlatform.dto.DonationDTO;
 import ba.unsa.etf.nbp.DonationPlatform.service.DonationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,6 +10,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/donations")
 public class DonationController {
+
     private final DonationService donationService;
 
     public DonationController(DonationService donationService) {
@@ -17,27 +18,30 @@ public class DonationController {
     }
 
     @PostMapping
-    public ResponseEntity<Donation> createDonation(@RequestBody Donation donation) {
-        return ResponseEntity.ok(donationService.createDonation(donation));
+    public ResponseEntity<DonationDTO> createDonation(@RequestBody DonationDTO donationDTO) {
+        DonationDTO createdDonation = donationService.createDonation(donationDTO);
+        if (createdDonation != null) {
+            return ResponseEntity.ok(createdDonation);
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @GetMapping("/user/{userId}")
-    public List<Donation> getUserDonations(@PathVariable Long userId) {
+    public List<DonationDTO> getUserDonations(@PathVariable Long userId) {
         return donationService.getUserDonations(userId);
     }
 
-    // UPDATE donation
     @PutMapping("/{id}")
-    public ResponseEntity<Donation> updateDonation(@PathVariable Long id, @RequestBody Donation donation) {
+    public ResponseEntity<DonationDTO> updateDonation(@PathVariable Long id, @RequestBody DonationDTO donationDTO) {
         try {
-            Donation updated = donationService.updateDonation(id, donation);
-            return ResponseEntity.ok(updated);
+            DonationDTO updatedDonation = donationService.updateDonation(id, donationDTO);
+            return ResponseEntity.ok(updatedDonation);
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
         }
     }
 
-    // DELETE donation
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteDonation(@PathVariable Long id) {
         try {
