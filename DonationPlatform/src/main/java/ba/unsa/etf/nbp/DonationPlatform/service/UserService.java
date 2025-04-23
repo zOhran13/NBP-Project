@@ -100,4 +100,14 @@ public class UserService {
         user.setRole(role);
         return userRepository.save(user);
     }
+    public User changeUserRole(Long userId, String roleName) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        Role newRole = roleRepository.findByName(roleName)
+                .orElseThrow(() -> new RuntimeException("Role not found"));
+
+        user.setRole(newRole);
+        return userRepository.save(user);
+    }
 }
