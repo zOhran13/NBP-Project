@@ -1,0 +1,54 @@
+.badgeContainer {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background-color: var(--color-primary-main);
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  margin-bottom: 1.5rem;
+  perspective: 1000px;
+  overflow: hidden;
+  position: relative;
+}
+
+.badgeContainer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transform: translateX(-100%);
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.badge {
+  font-size: 1.5rem;
+  transform-style: preserve-3d;
+  display: inline-block;
+}
+
+.text {
+  color: white;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+@media (max-width: 768px) {
+  .badgeContainer {
+    margin-left: auto;
+    margin-right: auto;
+  }
+} 

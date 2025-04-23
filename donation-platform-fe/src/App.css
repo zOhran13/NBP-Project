@@ -1,38 +1,96 @@
-.App {
+@import './styles/colors.css';
+
+#root {
+  max-width: 100%;
+  margin: 0 auto;
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
+.App {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  background-color: var(--color-background-light);
 }
 
-.App-link {
-  color: #61dafb;
+main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
+.contentWrapper {
+  max-width: 1400px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 clamp(1rem, 3vw, 2rem);
+}
+
+section {
+  width: 100%;
+  padding: clamp(3rem, 6vw, 6rem) 0;
+}
+
+.card {
+  padding: 2em;
+}
+
+.card button {
+  margin-bottom: 1em;
+}
+
+/* Responsive typography */
+:root {
+  --font-size-base: clamp(16px, 1vw, 18px);
+  --line-height-base: 1.5;
+  --font-size-h1: clamp(2rem, 4vw, 3rem);
+  --font-size-h2: clamp(1.75rem, 3vw, 2.5rem);
+  --font-size-h3: clamp(1.5rem, 2.5vw, 2rem);
+  --font-size-h4: clamp(1.25rem, 2vw, 1.75rem);
+  --font-size-h5: clamp(1.125rem, 1.5vw, 1.5rem);
+  --font-size-h6: clamp(1rem, 1.25vw, 1.25rem);
+}
+
+/* Base styles */
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 
+    Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-base);
+  color: var(--color-text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Responsive spacing utilities */
+.mt-auto { margin-top: auto; }
+.mb-auto { margin-bottom: auto; }
+.mx-auto { margin-left: auto; margin-right: auto; }
+
+.p-0 { padding: 0; }
+.m-0 { margin: 0; }
+
+/* Responsive container widths */
+@media (max-width: 1400px) {
+  .contentWrapper {
+    max-width: 100%;
   }
 }
+
+@media (max-width: 992px) {
+  section {
+    padding: clamp(2rem, 4vw, 4rem) 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .contentWrapper {
+    padding: 0 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  section {
+    padding: clamp(1.5rem, 3vw, 2rem) 0;
+  }
+} 

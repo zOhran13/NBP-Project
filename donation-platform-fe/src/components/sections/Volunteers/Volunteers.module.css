@@ -1,0 +1,243 @@
+.volunteers {
+  padding: clamp(3rem, 6vw, 6rem) 0;
+  background-color: var(--color-background-light);
+}
+
+.header {
+  max-width: 800px;
+  margin: 0 auto clamp(3rem, 6vw, 5rem);
+  text-align: left;
+  padding: 0 clamp(1rem, 3vw, 2rem);
+  position: relative;
+}
+
+.badge {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  background: var(--color-primary-main);
+  color: white;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: 1.5rem;
+  overflow: hidden;
+}
+
+.badge::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transform: translateX(-100%);
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.title {
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 800;
+  color: var(--color-primary-main);
+  margin-bottom: clamp(1rem, 2vw, 1.5rem);
+  line-height: 1.2;
+  text-align: left;
+}
+
+.subtitle {
+  font-size: clamp(1rem, 1.5vw, 1.2rem);
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+  max-width: 600px;
+  text-align: left;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 350px), 1fr));
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 clamp(1rem, 3vw, 2rem);
+}
+
+.card {
+  background: white;
+  border-radius: clamp(12px, 2vw, 16px);
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  text-align: left;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+}
+
+.imageWrapper {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.card:hover .image {
+  transform: scale(1.05);
+}
+
+.location {
+  position: absolute;
+  bottom: 1rem;
+  left: 1rem;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  color: var(--color-primary-main);
+  font-weight: 500;
+  backdrop-filter: blur(4px);
+}
+
+.dot {
+  margin: 0 0.5rem;
+  opacity: 0.6;
+}
+
+.content {
+  padding: clamp(1.25rem, 2vw, 1.5rem);
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.positionTitle {
+  font-size: clamp(1.25rem, 2vw, 1.5rem);
+  font-weight: 700;
+  color: var(--color-primary-main);
+  margin-bottom: 1rem;
+  line-height: 1.2;
+}
+
+.description {
+  font-size: clamp(0.875rem, 1.2vw, 1rem);
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+}
+
+.requirements {
+  margin-top: auto;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.requirementsTitle {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-primary-main);
+  margin-bottom: 1rem;
+  text-align: left;
+}
+
+.requirementsList {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1.5rem;
+  text-align: left;
+}
+
+.requirementItem {
+  position: relative;
+  padding-left: 1.5rem;
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+}
+
+.requirementItem::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: var(--color-primary-main);
+  font-weight: bold;
+}
+
+.applyButton {
+  width: 100%;
+  padding: clamp(0.75rem, 1.5vw, 1rem) clamp(1.5rem, 2vw, 2rem);
+  font-size: clamp(0.875rem, 1.2vw, 1rem);
+  font-weight: 600;
+  color: white;
+  background-color: var(--color-primary-main);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.applyButton:hover {
+  background-color: var(--color-primary-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .card {
+    max-width: 500px;
+    margin: 0 auto;
+  }
+
+  .header {
+    text-align: center;
+  }
+
+  .title, .subtitle {
+    text-align: center;
+  }
+
+  .badge {
+    display: inline-flex;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .imageWrapper {
+    height: 180px;
+  }
+
+  .location {
+    font-size: 0.75rem;
+    padding: 0.4rem 0.8rem;
+  }
+} 

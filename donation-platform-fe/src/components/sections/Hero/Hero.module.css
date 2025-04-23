@@ -1,0 +1,69 @@
+.hero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 5rem 0;
+  padding-bottom: 2;
+  gap: 4rem;
+  text-align: left;
+}
+
+.content {
+  flex: 1;
+  max-width: 600px;
+}
+
+.title {
+  font-size: 4rem;
+  font-weight: 800;
+  color: var(--color-primary-main);
+  margin-bottom: 1.5rem;
+  line-height: 1.1;
+}
+
+.description {
+  font-size: 1.25rem;
+  color: var(--color-text-secondary);
+  margin-bottom: 2.5rem;
+  line-height: 1.6;
+  max-width: 90%;
+}
+
+.buttonContainer {
+  display: flex;
+  gap: 1rem;
+}
+
+.buttonContainer button {
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
+}
+
+.image {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  max-width: 500px;
+}
+
+.image::after {
+  content: '';
+  position: absolute;
+  top: -20px;
+  right: -20px;
+  width: 100%;
+  height: 100%;
+  background-color: var(--color-primary-light);
+  opacity: 0.1;
+  border-radius: 20px;
+  z-index: -1;
+}
+
+.image img {
+  width: 100%;
+  max-width: 500px;
+  height: auto;
+  object-fit: contain;
+} 

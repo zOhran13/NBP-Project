@@ -1,0 +1,31 @@
+@import '../../../styles/colors.css';
+
+.button {
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  border: none;
+  font-size: 1rem;
+}
+
+.primary {
+  background-color: var(--color-button-primary);
+  color: white;
+}
+
+.primary:hover {
+  background-color: var(--color-button-hover);
+}
+
+.secondary {
+  background-color: transparent;
+  border: 2px solid var(--color-primary-main);
+  color: var(--color-primary-main);
+}
+
+.secondary:hover {
+  background-color: var(--color-primary-main);
+  color: white;
+} 
