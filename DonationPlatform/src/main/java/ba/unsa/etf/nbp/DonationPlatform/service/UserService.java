@@ -1,6 +1,7 @@
 package ba.unsa.etf.nbp.DonationPlatform.service;
 
 import ba.unsa.etf.nbp.DonationPlatform.dto.RoleDTO;
+import ba.unsa.etf.nbp.DonationPlatform.mapper.UserMapper;
 import ba.unsa.etf.nbp.DonationPlatform.model.Address;
 import ba.unsa.etf.nbp.DonationPlatform.model.Campaign;
 import ba.unsa.etf.nbp.DonationPlatform.model.Role;
@@ -13,6 +14,7 @@ import ba.unsa.etf.nbp.DonationPlatform.request.RegisterUserRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import ba.unsa.etf.nbp.DonationPlatform.mapper.UserMapper;
 
 import java.util.List;
 import java.util.Optional;
@@ -29,6 +31,9 @@ public class UserService {
     private RoleRepository roleRepository;
     @Autowired
     private AddressRepository addressRepository;
+    @Autowired
+    private UserMapper userMapper;
+
     public UserService(PasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;
     }
@@ -41,6 +46,7 @@ public class UserService {
                         user.getId(),
                         user.getUsername(),
                         user.getEmail(),
+                        user.getPassword(),
                         user.getRole().getName(),
                         user.getAddressId() != null
                                 ? addressRepository.findById(user.getAddressId())
@@ -60,6 +66,7 @@ public class UserService {
                         user.getUsername(),
                         user.getEmail(),
                         user.getRole().getName(),
+                        user.getPassword(),
                         user.getAddressId() != null
                                 ? addressRepository.findById(user.getAddressId())
                                 .map(Address::getStreet)
@@ -110,4 +117,13 @@ public class UserService {
         user.setRole(newRole);
         return userRepository.save(user);
     }
+
+
+
+    public UserDTO getUserByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .map(userMapper::mapToUserDto)
+                .orElseThrow(() -> new RuntimeException("User not found with email: " + email));
+    }
+
 }

@@ -6,14 +6,18 @@ public class UserDTO {
     private String email;
     private String role;
     private String address;
+    private String password;
 
-    public UserDTO(Long id, String username, String email, String role, String address) {
+
+    public UserDTO(Long id, String username, String email, String password,String role, String address) {
         this.id = id;
         this.username = username;
         this.email = email;
         this.role = role;
         this.address = address;
+        this.password = password;
     }
+
 
     public Long getId() {
         return id;
@@ -34,6 +38,7 @@ public class UserDTO {
     public String getAddress() {
         return address;
     }
+    public String getPassword() {return password;}
 
 
 }
