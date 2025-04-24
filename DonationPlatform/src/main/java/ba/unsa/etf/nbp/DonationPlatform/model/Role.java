@@ -1,6 +1,7 @@
 package ba.unsa.etf.nbp.DonationPlatform.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,7 +23,7 @@ public class Role {
     private Long id;
 
     private String name;
-
+    @JsonIgnore
     @OneToMany(mappedBy = "role")
     private Set<User> nbpUsers = new LinkedHashSet<>();
 
