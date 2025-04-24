@@ -17,7 +17,7 @@ import java.util.Calendar;
 @Component
 public class JwtTokenHelper {
 
-    @Value("${jwt.secret:defaultSecretKey}")
+    @Value("${application.security.jwt.secret-key}")
     private String secretKey;
 
     private SecretKey key;
