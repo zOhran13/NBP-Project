@@ -7,14 +7,20 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 
 import java.time.LocalDate;
+import java.util.Collection;
+import java.util.List;
 
 @Getter
 @Setter
 @Entity
 @Table(name = "NBP_USER", schema = "NBP")
-public class User {
+public class User implements UserDetails{
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "NBP_USER_id_gen")
     @SequenceGenerator(name = "NBP_USER_id_gen", sequenceName = "NBP_USER_ID_SEQ", allocationSize = 1)
@@ -61,5 +67,10 @@ public class User {
     @OnDelete(action = OnDeleteAction.RESTRICT)
     @JoinColumn(name = "ROLE_ID", nullable = false)
     private Role role;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority("ROLE_" + role.getName().toUpperCase()));
+    }
 
 }
