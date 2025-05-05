@@ -39,6 +39,7 @@ public class SecurityConfigJwt {
                         .requestMatchers("/api/users/login").permitAll()
                         .requestMatchers("/api/users/register").permitAll()
                         .requestMatchers(GET,"/api/users/users").hasRole("ADMIN")
+                        .requestMatchers("/api/user/logout").hasAnyRole("ADMIN","VOLONTER","DONATOR")
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
