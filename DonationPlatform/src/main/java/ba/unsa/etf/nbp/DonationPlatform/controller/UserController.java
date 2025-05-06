@@ -1,8 +1,10 @@
 package ba.unsa.etf.nbp.DonationPlatform.controller;
 
 import ba.unsa.etf.nbp.DonationPlatform.dto.RoleDTO;
+import ba.unsa.etf.nbp.DonationPlatform.model.RevokedToken;
 import ba.unsa.etf.nbp.DonationPlatform.model.User;
 import ba.unsa.etf.nbp.DonationPlatform.dto.UserDTO;
+import ba.unsa.etf.nbp.DonationPlatform.repository.RevokedTokenRepository;
 import ba.unsa.etf.nbp.DonationPlatform.request.LoginUserRequest;
 import ba.unsa.etf.nbp.DonationPlatform.request.RegisterUserRequest;
 import ba.unsa.etf.nbp.DonationPlatform.response.LoginResponse;
@@ -33,6 +35,8 @@ public class UserController {
     @Autowired
     private RoleService roleService;
 
+    @Autowired
+    private RevokedTokenRepository revokedTokenRepository;
 
 
     @GetMapping("/users")
@@ -70,5 +74,16 @@ public class UserController {
         // Return unauthorized if authentication fails
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
-
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(@RequestHeader("Authorization") String authHeader) {
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            String token = authHeader.substring(7);
+            if (!revokedTokenRepository.existsByToken(token)) {
+                RevokedToken revokedToken = new RevokedToken();
+                revokedToken.setToken(token);
+                revokedTokenRepository.save(revokedToken);
+            }
+        }
+        return ResponseEntity.ok().build();
+    }
 }
