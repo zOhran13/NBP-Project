@@ -1,6 +1,7 @@
 package ba.unsa.etf.nbp.DonationPlatform.controller;
 
 import ba.unsa.etf.nbp.DonationPlatform.dto.RoleDTO;
+import ba.unsa.etf.nbp.DonationPlatform.dto.ValidateTokenRequestDTO;
 import ba.unsa.etf.nbp.DonationPlatform.model.User;
 import ba.unsa.etf.nbp.DonationPlatform.dto.UserDTO;
 import ba.unsa.etf.nbp.DonationPlatform.request.LoginUserRequest;
@@ -9,6 +10,7 @@ import ba.unsa.etf.nbp.DonationPlatform.response.LoginResponse;
 import ba.unsa.etf.nbp.DonationPlatform.security.JwtTokenHelper;
 import ba.unsa.etf.nbp.DonationPlatform.service.RoleService;
 import ba.unsa.etf.nbp.DonationPlatform.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/users")
@@ -70,5 +73,19 @@ public class UserController {
         // Return unauthorized if authentication fails
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
+
+    @PostMapping("/validate-token")
+    public ResponseEntity<Void> validateToken(
+            @RequestHeader("Authorization") String authorizationHeader,
+            @RequestBody ValidateTokenRequestDTO validateTokenRequestDto) {
+
+        String token = authorizationHeader.replace("Bearer ", "");
+        boolean isValid = tokenHelper.validateTokenAndItsClaims(token, validateTokenRequestDto.getRoles());
+
+        return isValid ? ResponseEntity.status(HttpStatus.ACCEPTED).build()
+                : ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    }
+
+
 
 }

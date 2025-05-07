@@ -1,20 +1,16 @@
 package ba.unsa.etf.nbp.DonationPlatform.service;
 
-import ba.unsa.etf.nbp.DonationPlatform.dto.RoleDTO;
 import ba.unsa.etf.nbp.DonationPlatform.mapper.UserMapper;
-import ba.unsa.etf.nbp.DonationPlatform.model.Address;
-import ba.unsa.etf.nbp.DonationPlatform.model.Campaign;
-import ba.unsa.etf.nbp.DonationPlatform.model.Role;
-import ba.unsa.etf.nbp.DonationPlatform.model.User;
+import ba.unsa.etf.nbp.DonationPlatform.model.*;
 import ba.unsa.etf.nbp.DonationPlatform.dto.UserDTO;
 import ba.unsa.etf.nbp.DonationPlatform.repository.AddressRepository;
+import ba.unsa.etf.nbp.DonationPlatform.repository.PasswordTokenRepository;
 import ba.unsa.etf.nbp.DonationPlatform.repository.RoleRepository;
 import ba.unsa.etf.nbp.DonationPlatform.repository.UserRepository;
 import ba.unsa.etf.nbp.DonationPlatform.request.RegisterUserRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import ba.unsa.etf.nbp.DonationPlatform.mapper.UserMapper;
 
 import java.util.List;
 import java.util.Optional;
@@ -33,6 +29,8 @@ public class UserService {
     private AddressRepository addressRepository;
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private PasswordTokenRepository passwordTokenRepository;
 
     public UserService(PasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;
@@ -125,5 +123,7 @@ public class UserService {
                 .map(userMapper::mapToUserDto)
                 .orElseThrow(() -> new RuntimeException("User not found with email: " + email));
     }
+
+
 
 }
