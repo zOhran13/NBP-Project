@@ -39,6 +39,7 @@ public class SecurityConfigJwt {
                         .requestMatchers("/api/users/login").permitAll()
                         .requestMatchers("/api/users/register").permitAll()
                         .requestMatchers(GET,"/api/users/users").hasRole("ADMIN")
+                        .requestMatchers("/api/user/logout").hasAnyRole("ADMIN","VOLONTER","DONATOR")
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
@@ -50,7 +51,7 @@ public class SecurityConfigJwt {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowCredentials(true);
-        configuration.setAllowedOrigins(List.of("http://localhost:8080"));
+        configuration.setAllowedOrigins(List.of("http://localhost:5173"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         configuration.setAllowedHeaders(List.of("*"));
 

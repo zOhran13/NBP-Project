@@ -2,7 +2,9 @@ package ba.unsa.etf.nbp.DonationPlatform.security;
 
 import ba.unsa.etf.nbp.DonationPlatform.enums.RoleName;
 import ba.unsa.etf.nbp.DonationPlatform.model.User;
+import ba.unsa.etf.nbp.DonationPlatform.repository.RevokedTokenRepository;
 import ba.unsa.etf.nbp.DonationPlatform.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,9 +26,11 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     private final JwtTokenHelper jwtTokenHelper;
     private final UserRepository userRepository;
 
-    public JwtTokenFilter(JwtTokenHelper jwtTokenHelper, UserRepository userRepository) {
+    private final RevokedTokenRepository revokedTokenRepository;
+    public JwtTokenFilter(JwtTokenHelper jwtTokenHelper, UserRepository userRepository, RevokedTokenRepository revokedTokenRepository) {
         this.jwtTokenHelper = jwtTokenHelper;
         this.userRepository = userRepository;
+        this.revokedTokenRepository = revokedTokenRepository;
     }
 
     @Override
@@ -45,6 +49,12 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             String token = authHeader.substring(7);
+            if (revokedTokenRepository.existsByToken(token)) {
+                logger.warn("Token je blokiran");
+                chain.doFilter(request, response);
+                return;
+            }
+
             try {
                 List<String> allowedRoles = List.of(
                         RoleName.VOLONTER.name(),
