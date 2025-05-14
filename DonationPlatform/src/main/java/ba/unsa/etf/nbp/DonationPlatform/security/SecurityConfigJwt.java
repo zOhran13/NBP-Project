@@ -30,6 +30,7 @@ public class SecurityConfigJwt {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        // TO-DO: REMOVE REPORTS PDF FROM HERE
         http
                 .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Omogući CORS
                 .csrf(csrf -> csrf.disable())
