@@ -8,6 +8,7 @@ import { Volunteers } from './components/sections/Volunteers/Volunteers';
 import { Login } from './pages/Login/Login';
 import { Signup } from './pages/Signup/Signup';
 import { ForgotPassword } from './pages/ForgotPassword/ForgotPassword';
+import { ResetPassword } from './pages/ResetPassword/ResetPassword';
 import './App.css';
 
 function App() {
@@ -33,6 +34,7 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
           </Routes>
         </main>
       </div>

@@ -39,6 +39,7 @@ public class SecurityConfigJwt {
                         .requestMatchers("/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**", "/v3/api-docs.yaml", "/swagger-resources/**", "/webjars/**").permitAll()
                         .requestMatchers("/api/users/login").permitAll()
                         .requestMatchers("/api/users/register").permitAll()
+                        .requestMatchers("/auth/**").permitAll()
                         .requestMatchers(GET,"/api/users/users").hasRole("ADMIN")
                         .requestMatchers("/api/user/logout").hasAnyRole("ADMIN","VOLONTER","DONATOR")
                         .anyRequest().authenticated()
@@ -52,7 +53,8 @@ public class SecurityConfigJwt {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowCredentials(true);
-        configuration.setAllowedOrigins(List.of("http://localhost:5173"));
+        configuration.setAllowedOrigins(List.of("http://localhost:5173","http://localhost:8080"));
+
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         configuration.setAllowedHeaders(List.of("*"));
 

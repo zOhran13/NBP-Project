@@ -9,14 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 import java.util.UUID;
-
+@CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping("/auth")
 public class PasswordResetController {
@@ -41,9 +38,11 @@ public class PasswordResetController {
         }
 
         String token = UUID.randomUUID().toString();
+        System.out.println(token);
         tokenService.createToken(user.orElse(null), token);
 
-        String resetUrl = "http://localhost:8080/auth/reset-password?token=" + token;
+        // Change this line to use the frontend URL instead
+        String resetUrl = "http://localhost:5173/reset-password?token=" + token;
         emailService.sendResetPasswordEmail(email, resetUrl);
 
         return ResponseEntity.ok("Reset link sent to email.");

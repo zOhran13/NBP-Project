@@ -16,12 +16,23 @@ public class PasswordResetTokenService {
     private PasswordTokenRepository tokenRepository;
 
     public void createToken(User user, String token) {
-        PasswordResetToken resetToken = new PasswordResetToken();
-        resetToken.setToken(token);
-        resetToken.setUser(user);
-        resetToken.setExpiryDate(calculateExpiryDate(60));
-        tokenRepository.save(resetToken);
+        PasswordResetToken existingToken = tokenRepository.findByUser(user);
+
+        if (existingToken != null) {
+            // Ažuriraj postojeći token
+            existingToken.setToken(token);
+            existingToken.setExpiryDate(calculateExpiryDate(60));
+            tokenRepository.save(existingToken);
+        } else {
+            // Napravi novi token ako ne postoji
+            PasswordResetToken resetToken = new PasswordResetToken();
+            resetToken.setToken(token);
+            resetToken.setUser(user);
+            resetToken.setExpiryDate(calculateExpiryDate(60));
+            tokenRepository.save(resetToken);
+        }
     }
+
 
     public PasswordResetToken validateToken(String token) {
         PasswordResetToken prt = tokenRepository.findByToken(token);
