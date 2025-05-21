@@ -2,6 +2,7 @@ package ba.unsa.etf.nbp.DonationPlatform.controller;
 
 import ba.unsa.etf.nbp.DonationPlatform.dto.RoleDTO;
 import ba.unsa.etf.nbp.DonationPlatform.dto.ValidateTokenRequestDTO;
+import ba.unsa.etf.nbp.DonationPlatform.mapper.UserMapper;
 import ba.unsa.etf.nbp.DonationPlatform.model.RevokedToken;
 import ba.unsa.etf.nbp.DonationPlatform.model.User;
 import ba.unsa.etf.nbp.DonationPlatform.dto.UserDTO;
@@ -19,9 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/users")
@@ -77,7 +76,7 @@ public class UserController {
         // Return unauthorized if authentication fails
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
- 
+
 
     @PostMapping("/validate-token")
     public ResponseEntity<Void> validateToken(
@@ -103,4 +102,83 @@ public class UserController {
         }
         return ResponseEntity.ok().build();
     }
+    @PutMapping("/profile")
+    public ResponseEntity<?> updateProfile(@RequestHeader("Authorization") String authHeader,
+                                           @RequestBody Map<String, String> updateRequest) {
+        try {
+
+            String token = authHeader.replace("Bearer ", "");
+            String emailFromToken = tokenHelper.getClaimsFromToken(token).get("email", String.class);
+
+
+            UserDTO existingUser = userService.getUserByEmail(emailFromToken);
+
+            if (existingUser == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+            }
+
+            String newEmail = updateRequest.get("email");
+            String newUsername = updateRequest.get("username");
+            //String newAddress = updateRequest.get("address");
+
+
+            if (newEmail != null && !newEmail.isBlank()) {
+                existingUser.setEmail(newEmail);
+            }
+            if (newUsername != null && !newUsername.isBlank()) {
+                existingUser.setUsername(newUsername);
+            }
+            /*if (newAddress != null && !newAddress.isBlank()) {
+               existingUser.setAddress(newAddress);
+            }*/
+
+
+            UserDTO updatedUser = userService.updateUserProfile(existingUser);
+
+
+            return ResponseEntity.ok(updatedUser);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error updating profile");
+        }
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<?> getCurrentUserProfile(@RequestHeader("Authorization") String authHeader) {
+        try {
+            // Extract token from Authorization header
+            String token = authHeader.replace("Bearer ", "");
+
+            // Get email from token
+            String email = tokenHelper.getClaimsFromToken(token).get("email", String.class);
+            System.out.println("Email from token: " + email); // Debug log
+
+            try {
+                // Get user by email using the existing method
+                UserDTO user = userService.getUserByEmail(email);
+
+                // Create a response object with only the necessary user information
+                Map<String, Object> response = new HashMap<>();
+                response.put("id", user.getId());
+                response.put("email", user.getEmail());
+                response.put("username", user.getUsername());
+                response.put("addressId", user.getAddress());
+
+                System.out.println("Found user: " + user.getEmail()); // Debug log
+                return ResponseEntity.ok(response);
+            } catch (RuntimeException e) {
+                System.out.println("User not found for email: " + email); // Debug log
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+            }
+        } catch (Exception e) {
+            System.out.println("Error in getCurrentUserProfile: " + e.getMessage()); // Debug log
+            e.printStackTrace(); // Print full stack trace
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
+        }
+
+
+    }
+
+
 }

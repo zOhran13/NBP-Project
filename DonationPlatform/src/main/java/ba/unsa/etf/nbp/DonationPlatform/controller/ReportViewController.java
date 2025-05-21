@@ -5,10 +5,7 @@ import ba.unsa.etf.nbp.DonationPlatform.service.ReportViewService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/reports")
@@ -19,7 +16,7 @@ public class ReportViewController {
     public ReportViewController(ReportViewService reportService) {
         this.reportService = reportService;
     }
-    @GetMapping("/reports/campaign/{id}/pdf")
+    @GetMapping("/campaign/{id}/pdf")
     public ResponseEntity<byte[]> getCampaignReportPdf(@PathVariable Long id) {
         byte[] pdf = reportService.generateCampaignReportPdf(id);
         return ResponseEntity.ok()
@@ -27,8 +24,17 @@ public class ReportViewController {
                 .contentType(MediaType.APPLICATION_PDF)
                 .body(pdf);
     }
-    @GetMapping("/reports/user/{userId}/pdf")
+    @CrossOrigin(origins = "http://localhost:3000")
+    @GetMapping("/user/{userId}/pdf")
     public ResponseEntity<byte[]> getUserReportPdf(@PathVariable Long userId) {
+        byte[] pdf = reportService.generateUserFullDonationReport(userId);
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=user_" + userId + "_donations.pdf")
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(pdf);
+    }
+    @GetMapping("/user/{userId}/pdf/download")
+    public ResponseEntity<byte[]> downloadUserReportPdf(@PathVariable Long userId) {
         byte[] pdf = reportService.generateUserFullDonationReport(userId);
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=user_" + userId + "_donations.pdf")

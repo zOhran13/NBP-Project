@@ -9,6 +9,7 @@ import { Login } from './pages/Login/Login';
 import { Signup } from './pages/Signup/Signup';
 import { ForgotPassword } from './pages/ForgotPassword/ForgotPassword';
 import { ResetPassword } from './pages/ResetPassword/ResetPassword';
+import { Profile } from './pages/Profile/Profile';
 import './App.css';
 
 function App() {
@@ -35,6 +36,7 @@ function App() {
             <Route path="/signup" element={<Signup />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/reset-password" element={<ResetPassword />} />
+            <Route path="/profile" element={<Profile />} />
           </Routes>
         </main>
       </div>

@@ -11,6 +11,7 @@ export const Login: React.FC = () => {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log('Login attempt with email:', email);
 
     try {
       const response = await fetch('http://localhost:8080/api/users/login', {
@@ -21,12 +22,16 @@ export const Login: React.FC = () => {
 
       if (response.ok) {
         const data = await response.json();
+        console.log('Login successful, received token:', data.accessToken);
         Cookies.set('accessToken', data.accessToken, { expires: 1 });
+        console.log('Token stored in cookie:', Cookies.get('accessToken'));
         navigate('/');
       } else {
+        console.error('Login failed with status:', response.status);
         setError('Neispravni email ili lozinka');
       }
     } catch (err) {
+      console.error('Login error:', err);
       setError('Došlo je do greške. Pokušajte ponovo.');
     }
   };

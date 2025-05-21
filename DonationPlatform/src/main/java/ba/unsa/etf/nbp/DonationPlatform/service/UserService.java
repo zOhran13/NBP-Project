@@ -72,6 +72,21 @@ public class UserService {
                                 : "No address"
                 ));
     }
+    public UserDTO updateUserProfile(UserDTO updatedUserDTO) {
+        User existingUser = userRepository.findById(updatedUserDTO.getId())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        existingUser.setEmail(updatedUserDTO.getEmail());
+        existingUser.setUsername(updatedUserDTO.getUsername());
+        // Ako ima addressId u DTO-u
+        //existingUser.setAddressId(Long.valueOf(updatedUserDTO.getAddress()));
+
+        User updatedUser = userRepository.save(existingUser);
+        return userMapper.mapToUserDto(updatedUser);
+    }
+
+
+
 
     public User registerUser(RegisterUserRequest request) {
         if (userRepository.findByEmail(request.getEmail()).isPresent()) {

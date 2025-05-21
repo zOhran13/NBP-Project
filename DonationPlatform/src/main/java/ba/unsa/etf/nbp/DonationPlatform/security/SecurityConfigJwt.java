@@ -38,8 +38,13 @@ public class SecurityConfigJwt {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**", "/v3/api-docs.yaml", "/swagger-resources/**", "/webjars/**").permitAll()
                         .requestMatchers("/api/users/login").permitAll()
+                        .requestMatchers("/api/users/me").permitAll()
                         .requestMatchers("/api/users/register").permitAll()
+                        .requestMatchers("/api/users/**").permitAll()
+                        .requestMatchers("/api/reports/**").permitAll()
+                        .requestMatchers("/reports/user/**").permitAll()
                         .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/api/address/**").permitAll()
                         .requestMatchers(GET,"/api/users/users").hasRole("ADMIN")
                         .requestMatchers("/api/user/logout").hasAnyRole("ADMIN","VOLONTER","DONATOR")
                         .anyRequest().authenticated()

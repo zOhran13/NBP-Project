@@ -1,5 +1,8 @@
 package ba.unsa.etf.nbp.DonationPlatform.dto;
 
+import lombok.Setter;
+
+@Setter
 public class UserDTO {
     private Long id;
     private String username;
