@@ -6,6 +6,7 @@
 
 .naslov {
   font-size: 2.5rem;
+  padding-left: 5rem;
   font-weight: 700;
   color: var(--color-primary-main);
   margin-bottom: 1rem;
@@ -16,6 +17,7 @@
   color: var(--color-text-secondary);
   margin-bottom: 4rem;
   max-width: 600px;
+  padding-left: 5rem;
 }
 
 .mreza {

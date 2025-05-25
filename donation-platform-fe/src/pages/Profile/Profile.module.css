@@ -1,0 +1,541 @@
+.profileContainer {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+  padding: 3rem 1rem;
+  background: linear-gradient(120deg, #f5f5f5 60%, #e6f4ea 100%);
+}
+
+.profileCard {
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 8px 32px rgba(56, 142, 60, 0.08), 0 1.5px 6px rgba(0,0,0,0.04);
+  width: 100%;
+  max-width: 900px;
+  padding: 2.5rem 2rem;
+  margin: 2rem 0;
+  transition: box-shadow 0.2s;
+}
+
+.profileCard:hover {
+  box-shadow: 0 12px 40px rgba(56, 142, 60, 0.13), 0 2px 8px rgba(0,0,0,0.06);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2.5rem;
+}
+
+.header h1 {
+  margin: 0;
+  color: var(--color-primary-main, #388E3C);
+  font-size: 2.2rem;
+  font-weight: 700;
+  letter-spacing: -1px;
+}
+
+.editButton {
+  background: linear-gradient(90deg, #388E3C 60%, #4CAF50 100%);
+  color: #fff;
+  border: none;
+  padding: 0.6rem 1.4rem;
+  border-radius: 6px;
+  font-size: 1.05rem;
+  font-weight: 500;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(56, 142, 60, 0.08);
+  transition: background 0.2s, box-shadow 0.2s;
+}
+.editButton:hover {
+  background: linear-gradient(90deg, #4CAF50 60%, #388E3C 100%);
+  box-shadow: 0 4px 16px rgba(56, 142, 60, 0.13);
+}
+
+.tabs {
+  display: flex;
+  gap: 1.2rem;
+  margin-bottom: 2.2rem;
+  border-bottom: 2px solid #e0e0e0;
+  padding-bottom: 0.7rem;
+}
+
+.tabButton {
+  background: none;
+  border: none;
+  padding: 0.7rem 1.5rem 0.7rem 1.5rem;
+  font-size: 1.08rem;
+  color: #666;
+  cursor: pointer;
+  border-radius: 6px 6px 0 0;
+  font-weight: 500;
+  transition: color 0.2s, background 0.2s;
+  position: relative;
+}
+.tabButton:hover {
+  color: var(--color-primary-main, #388E3C);
+  background: #e6f4ea;
+}
+.tabButton.active {
+  color: #fff;
+  background: var(--color-primary-main, #388E3C);
+}
+.tabButton.active::after {
+  content: '';
+  position: absolute;
+  bottom: -0.7rem;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: var(--color-primary-main, #388E3C);
+  border-radius: 2px;
+}
+
+.profileTabs {
+  display: flex;
+  flex-direction: row;
+  gap: 2.5rem;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.profileSection,
+.addressSection,
+.volunteerSection,
+.reportsSection {
+  background: #f9f9f9;
+  padding: 2rem 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(56, 142, 60, 0.04);
+  margin-bottom: 2rem;
+  flex: 1 1 350px;
+}
+
+.profileSection h2,
+.addressSection h2,
+.volunteerSection h2,
+.reportsSection h2 {
+  margin-top: 0;
+  margin-bottom: 1.2rem;
+  color: var(--color-primary-main, #388E3C);
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+.addressSection h2{
+  margin-bottom: 1.7rem;
+}
+.form {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  gap: 2.5rem;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1.2rem;
+}
+
+.formGroup label {
+  font-weight: 500;
+  color: #388E3C;
+  font-size: 1.02rem;
+}
+
+.formGroup input {
+  padding: 0.85rem 1rem;
+  border: 1.5px solid #c8e6c9;
+  border-radius: 8px;
+  font-size: 1.05rem;
+  background: #fff;
+  transition: border 0.2s, box-shadow 0.2s;
+  outline: none;
+}
+.formGroup input:focus {
+  border-color: var(--color-primary-main, #388E3C);
+  box-shadow: 0 2px 8px rgba(56, 142, 60, 0.08);
+}
+.formGroup input:disabled {
+  background-color: #f5f5f5;
+  cursor: not-allowed;
+}
+
+.saveButton {
+  background: linear-gradient(90deg, #388E3C 60%, #4CAF50 100%);
+  color: #fff;
+  border: none;
+  padding: 0.85rem 2.2rem;
+  border-radius: 8px;
+  font-size: 1.08rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(56, 142, 60, 0.08);
+  transition: background 0.2s, box-shadow 0.2s;
+  margin-top: 0.5rem;
+}
+.saveButton:hover {
+  background: linear-gradient(90deg, #4CAF50 60%, #388E3C 100%);
+  box-shadow: 0 4px 16px rgba(56, 142, 60, 0.13);
+}
+
+.addressActions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 0rem;
+}
+
+@media (max-width: 900px) {
+  .profileTabs, .form {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  .profileSection, .addressSection {
+    padding: 1.2rem 0.7rem;
+  }
+  .profileCard {
+    padding: 1.2rem 0.7rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .profileCard {
+    padding: 0.5rem 0.2rem;
+  }
+  .profileSection, .addressSection {
+    padding: 0.7rem 0.2rem;
+  }
+  .tabs {
+    gap: 0.5rem;
+    padding-bottom: 0.3rem;
+  }
+}
+
+.addressInput {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1.5px solid #ccc;
+  border-radius: 8px 8px 0 0;
+  font-size: 1rem;
+  outline: none;
+  transition: border 0.2s;
+  background: #fff;
+  z-index: 1;
+}
+
+.addressInput:focus {
+  border-color: var(--color-primary-main, #388E3C);
+}
+
+.suggestionsList {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  background: white;
+  border: 1.5px solid #ccc;
+  border-top: none;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+  max-height: 220px;
+  overflow-y: auto;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.suggestionsList li {
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  font-size: 1rem;
+  color: #222;
+  transition: background 0.2s;
+  display: flex;
+  align-items: center;
+}
+
+.suggestionsList li:hover {
+  background: var(--color-primary-light, #e6f4ea);
+}
+
+.shiftsList,
+.reportsList {
+  display: flex;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1rem;
+}
+
+.shiftCard,
+.reportCard {
+  background: white;
+  width: 100%;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.shiftInfo,
+.reportInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.shiftInfo p,
+.reportInfo p {
+  margin: 0;
+  color: #666;
+}
+
+.viewReportButton {
+  background-color: #2196F3;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.3s;
+  margin-top: 1rem;
+  width: 100%;
+}
+
+.viewReportButton:hover {
+  background-color: #1976D2;
+}
+
+@media (max-width: 768px) {
+  .profileTabs {
+    grid-template-columns: 1fr;
+  }
+
+  .profileCard {
+    padding: 1rem;
+  }
+
+  .header {
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+  }
+
+  .tabs {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}
+
+.errorMessage {
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  max-width: 400px;
+  margin: 2rem auto;
+}
+
+.errorMessage h2 {
+  color: #d32f2f;
+  margin-bottom: 1rem;
+}
+
+.errorMessage p {
+  color: #666;
+  margin-bottom: 1.5rem;
+}
+
+.errorMessage button {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s;
+}
+
+.errorMessage button:hover {
+  background-color: #45a049;
+}
+
+.reportsSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.reportCard {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+  margin-bottom: 2rem;
+  max-width: 1000px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.reportInfo {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.reportActions {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+  justify-content: center;
+}
+
+.pdfPreview {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.pdfPreview iframe {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  width: 900px;
+  height: 900px;
+  background: #f5f5f5;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+}
+
+@media (max-width: 768px) {
+  .reportActions {
+    flex-direction: column;
+  }
+  
+  .viewReportButton,
+  .downloadButton {
+    width: 100%;
+  }
+}
+
+.successNotification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background-color: #4CAF50;
+  color: white;
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  animation: slideIn 0.3s ease-out, fadeOut 0.3s ease-out 2.7s;
+  opacity: 1;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+.pdfPreviewCard {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.10);
+  padding: 2rem 2rem 1.5rem 2rem;
+  margin: 2rem 0;
+  max-width: 900px;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.pdfPreviewHeader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  margin-bottom: 1.5rem;
+  width: 100%;
+}
+
+.pdfPreviewTitle {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--color-primary-main, #388E3C);
+  text-align: center;
+}
+
+.pdfDownloadButton {
+  background: var(--color-primary-main, #388E3C);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 0.7rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: background 0.2s;
+  cursor: pointer;
+}
+.pdfDownloadButton:hover {
+  background: var(--color-primary-dark, #256029);
+}
+
+.pdfIframe {
+  border: none;
+  border-radius: 8px;
+  width: 100%;
+  min-height: 700px;
+  background: #f7f9fa;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.profileSection, .addressSection {
+  flex: 1 1 350px;
+  min-width: 320px;
+  max-width: 500px;
+}
+
+.addressSection {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  margin-top: 0;
+  position: relative;
+}
+
+/* Prevent horizontal scroll */
+.profileContainer, .profileCard {
+  overflow-x: hidden;
+} 

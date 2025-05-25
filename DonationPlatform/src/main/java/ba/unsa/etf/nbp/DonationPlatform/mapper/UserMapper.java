@@ -12,10 +12,12 @@ import org.springframework.stereotype.Component;
 public class UserMapper {
 
     private final AddressRepository addressRepository;
+    private final AddressMapper addressMapper;
     private final RoleRepository roleRepository;
 
-    public UserMapper(AddressRepository addressRepository, RoleRepository roleRepository) {
+    public UserMapper(AddressRepository addressRepository, AddressMapper addressMapper, RoleRepository roleRepository) {
         this.addressRepository = addressRepository;
+        this.addressMapper = addressMapper;
         this.roleRepository = roleRepository;
     }
 
@@ -30,56 +32,43 @@ public class UserMapper {
         }
 
         return new UserDTO(
-                user.getId(),
+                user.getFirstName(),
+                user.getLastName(),
                 user.getUsername(),
                 user.getEmail(),
-                user.getPassword(),
-                user.getRole() != null ? user.getRole().getName() : null,
-                formatAddress(address)
+                user.getPhoneNumber(),
+                user.getBirthDate(),
+                address != null ? addressMapper.mapToAddressDto(address) : null,
+                user.getRole().getName()
         );
     }
     public User mapToUser(UserDTO userDTO) {
         if (userDTO == null) {
             return null;
         }
-
         User user = new User();
-        user.setId(userDTO.getId());
+        user.setFirstName(userDTO.getFirstName());
+        user.setLastName(userDTO.getLastName());
         user.setUsername(userDTO.getUsername());
         user.setEmail(userDTO.getEmail());
-        user.setPassword(userDTO.getPassword());
-
-        // Mapiranje role
-        if (userDTO.getRole() != null) {
-            user.setRole(roleRepository.findByName(userDTO.getRole()).orElse(null));
-        }
-
-
+        user.setPhoneNumber(userDTO.getPhoneNumber());
+        user.setBirthDate(userDTO.getBirthDate());
         if (userDTO.getAddress() != null) {
-            Address address = parseAddress(userDTO.getAddress());
-            if (address != null) {
+            Address address = addressMapper.mapToAddress(userDTO.getAddress());
 
-                Address existing = addressRepository.findByStreetAndCityAndPostalCodeAndCountry(
-                        address.getStreet(),
-                        address.getCity(),
-                        Long.parseLong(String.valueOf(address.getPostalCode())),
-                        address.getCountry()
-                ).orElse(null);
+            // Optional: check for an existing address before saving (e.g. by street)
+            Address existing = (Address) addressRepository.findAddressesByStreet(address.getStreet()).stream().findFirst()
+                    .orElse(null);
 
-
-                if (existing != null) {
-                    user.setAddressId(existing.getId());
-                } else {
-                    // Alternativa: sačuvaj novu adresu u bazu i koristi njen ID
-                    Address saved = addressRepository.save(address);
-                    user.setAddressId(saved.getId());
-                }
+            if (existing == null) {
+                existing = addressRepository.save(address);
             }
-        }
 
+            user.setAddressId(existing.getId());
+        }
+        user.setRole(roleRepository.findByName(userDTO.getRole()).orElse(null));
         return user;
     }
-
 
     private String formatAddress(Address address) {
         if (address == null) return null;

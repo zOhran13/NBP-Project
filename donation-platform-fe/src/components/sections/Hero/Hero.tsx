@@ -18,7 +18,7 @@ export const Hero: React.FC = () => {
         </div>
       </div>
       <div className={styles.image}>
-        <CharityIllustration />
+        <CharityIllustration/>
       </div>
     </section>
   );

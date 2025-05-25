@@ -1,11 +1,12 @@
 import { Link, useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import styles from './TopBar.module.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUserCircle } from '@fortawesome/free-solid-svg-icons';
 
 export const TopBar: React.FC = () => {
   const navigate = useNavigate();
   const token = Cookies.get('accessToken');
-
   const handleLogout = () => {
     Cookies.remove('accessToken');
     navigate('/login');
@@ -20,7 +21,9 @@ export const TopBar: React.FC = () => {
       <div className={styles.right}>
         {token ? (
           <>
-            <Link to="/profile" className={styles.profileLink}>Profil</Link>
+            <Link to="/profile" className={styles.profileIconBtn} title="Profil">
+              <FontAwesomeIcon icon={faUserCircle} />
+            </Link>
             <button onClick={handleLogout} className={styles.logoutButton}>Odjavi se</button>
           </>
         ) : (

@@ -1,0 +1,157 @@
+.signupContainer {
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: var(--color-background-light);
+}
+
+.signupHeader {
+  width: 100%;
+  padding: 1rem 2rem;
+  background-color: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.logoLink {
+  text-decoration: none;
+}
+.formContainer {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  width: 100%;
+  gap: 1rem;
+}
+.form {
+  background: white;
+  padding: 2rem;
+  margin-top: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  max-width: 700px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.form h1 {
+  margin-bottom: 1.5rem;
+  text-align: center;
+  color: var(--color-primary-main);
+}
+
+.form input {
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+  height: 40px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+.form button {
+  background-color: var(--color-primary-main);
+  color: white;
+  padding: 0.75rem;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.form button:hover {
+  background-color: var(--color-primary-dark);
+}
+
+.links {
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  text-align: center;
+}
+
+.textStatic {
+  color: black;
+  font-size: 0.9rem;
+}
+
+.linkDefault {
+  color: green;
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+.linkDefault:hover {
+  color: darkgreen;
+  text-decoration: underline;
+}
+
+.signupFlexContainer {
+  display: flex;
+  gap: 2.5rem;
+  justify-content: center;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.addressFormContainer {
+  padding: 0;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(56, 142, 60, 0.04);
+  color: var(--color-primary-main);
+  min-width: 320px;
+  max-width: 400px;
+  flex: 1 1 200px;
+}
+.addressInput {
+padding: 0rem;
+}
+.addressFormContainer h2 {
+  display: none;
+}
+@media (max-width: 900px) {
+  .signupFlexContainer {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  .addressFormContainer {
+    padding: 1.2rem 0.7rem;
+    margin-top: 1.2rem;
+  }
+}
+
+
+
+.signupFlexContainer :global(.addressInput) {
+
+  height: 40px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+.signupFlexContainer :global(.addressInput:focus) {
+  border-color: var(--color-primary-main, #388E3C);
+  box-shadow: 0 2px 8px rgba(56, 142, 60, 0.08);
+}
+
+.signupFlexContainer :global(.suggestionsList) {
+  border: 1px solid #ccc;
+  border-radius: 0 0 6px 6px;
+}
+
+.signupFlexContainer :global(.formGroup label) {
+  font-weight: 400;
+  color: #222;
+  font-size: 1rem;
+  margin-bottom: 0rem;
+}
+
+.signupFlexContainer :global(.formGroup input[disabled]) {
+  background-color: #f5f5f5;
+  color: #888;
+} 

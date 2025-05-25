@@ -46,6 +46,12 @@ public class CampaignController {
         }
     }
 
+    @GetMapping("/{id}/donated-amount")
+    public ResponseEntity<Double> getAmountDonated(@PathVariable Long id) {
+        Double donated = campaignService.getAmountDonatedForCampaign(id);
+        return ResponseEntity.ok(donated);
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCampaign(@PathVariable Long id) {
         try {
