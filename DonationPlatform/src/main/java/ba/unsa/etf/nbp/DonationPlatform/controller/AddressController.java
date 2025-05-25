@@ -37,7 +37,12 @@ public class AddressController {
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
-
+    @GetMapping("/{street}")
+    public ResponseEntity<Address> getAddressByStreet(@PathVariable String street) {
+        return addressService.getAddressByStreet(street)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
     // UPDATE
     @PutMapping("/{id}")
     public ResponseEntity<Address> updateAddress(@PathVariable Long id, @RequestBody Address updatedAddress) {

@@ -13,13 +13,9 @@
   margin: 0 auto;
   padding: 0 clamp(1rem, 3vw, 2rem);
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
-}
-
-.logoLink {
-  text-decoration: none;
-  color: white;
+  gap: 2rem;
 }
 
 .logo {
@@ -28,20 +24,15 @@
   font-weight: 700;
   text-decoration: none;
   transition: opacity 0.3s ease;
-}
-
-.logo:hover {
-  opacity: 0.9;
-}
-
-.logo span {
-  font-size: 1.25rem;
+  margin-left: 0;
+  padding-left: 0;
 }
 
 .nav {
   display: flex;
   align-items: center;
   gap: clamp(1rem, 2vw, 2rem);
+  margin-left: auto;
 }
 
 .link {
@@ -55,23 +46,6 @@
 
 .link:hover {
   opacity: 0.9;
-}
-
-.donateButton {
-  background-color: var(--color-primary-dark);
-  color: white;
-  border: none;
-  padding: clamp(0.5rem, 1vw, 0.75rem) clamp(1rem, 2vw, 1.5rem);
-  border-radius: 6px;
-  font-size: clamp(0.875rem, 1.2vw, 1rem);
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.donateButton:hover {
-  background-color: var(--color-primary-darker);
-  transform: translateY(-2px);
 }
 
 /* Mobile menu styles */
@@ -89,6 +63,7 @@
   display: none;
 }
 
+/* Responsive styles */
 @media (max-width: 992px) {
   .nav {
     gap: clamp(0.75rem, 1.5vw, 1.5rem);
@@ -99,7 +74,7 @@
   .menuButton {
     display: block;
   }
-
+  
   .nav {
     display: none;
   }
@@ -117,13 +92,13 @@
     transform: translateY(-100%);
     transition: transform 0.3s ease;
   }
-
+  
   .mobileNav.active {
     transform: translateY(0);
   }
-
+  
   .mobileNav .link {
-    padding: 0.75rem;
+    padding: 0.5rem;
     text-align: center;
     width: 100%;
   }
@@ -138,8 +113,9 @@
   .headerContent {
     padding: 0 1rem;
   }
-
+  
   .logo {
     font-size: 1.25rem;
+    padding-left: 0.3rem;
   }
 } 

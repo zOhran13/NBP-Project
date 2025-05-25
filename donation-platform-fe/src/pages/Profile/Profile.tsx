@@ -1,16 +1,23 @@
 import { useState, useEffect } from 'react';
 import Cookies from 'js-cookie';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import styles from './Profile.module.css';
+import { faDownload } from '@fortawesome/free-solid-svg-icons/faDownload';
+import { AddressForm } from '../../components/common/AddressForm/AddressForm';
 
 interface UserProfile {
   id: number;
   email: string;
   username: string;
+  firstname: string;
+  lastname: string;
+  birthdate: string;
+  phoneNumber: string;
   addressId: number;
+  role?: string;
 }
 
-interface Address {
-  id: number;
+interface AddressDTO {
   street: string;
   city: string;
   postalCode: string;
@@ -36,9 +43,11 @@ const PdfPreview: React.FC<{ userId: number }> = ({ userId }) => {
 
   useEffect(() => {
     let objectUrl: string | null = null;
-    fetch(`http://localhost:8080/reports/user/${userId}/pdf`, {
+    fetch(`http://localhost:8080/reports/user/pdf`, {
       method: 'GET',
-      // Add headers if needed
+      headers: {
+        "Authorization": `Bearer ${Cookies.get('accessToken')}`
+      }
     })
       .then(response => response.blob())
       .then(blob => {
@@ -53,15 +62,40 @@ const PdfPreview: React.FC<{ userId: number }> = ({ userId }) => {
   if (!pdfUrl) return <div>Loading PDF...</div>;
 
   return (
-    <iframe
-      src={pdfUrl}
-      title="Ukupan izvještaj donacija"
-      width="100%"
-      height="500"
-    />
+    <div className={styles.pdfPreviewCard}>
+      <div className={styles.pdfPreviewHeader}>
+        <span className={styles.pdfPreviewTitle}>Ukupan izvještaj donacija</span>
+        <button 
+          className={styles.pdfDownloadButton}
+          onClick={handleDownload}
+        >
+          <FontAwesomeIcon icon={faDownload} /> Preuzmi PDF
+        </button>
+      </div>
+      <iframe
+        src={pdfUrl}
+        title="Ukupan izvještaj donacija"
+        width="100%"
+        height="700"
+        className={styles.pdfIframe}
+      />
+    </div>
   );
 };
-
+const handleDownload = async () => {
+  const response = await fetch('http://localhost:8080/reports/user/pdf/download', {
+    headers: {
+      "Authorization": `Bearer ${Cookies.get('accessToken')}`
+    }
+  });
+  const blob = await response.blob();
+  const url = window.URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'ukupan-izvjestaj.pdf';
+  a.click();
+  window.URL.revokeObjectURL(url);
+};
 export const Profile: React.FC = () => {
   console.log('Profile component rendering');
   
@@ -71,9 +105,20 @@ export const Profile: React.FC = () => {
     id: 0,
     email: '',
     username: '',
+    firstname: '',
+    lastname: '',
+    birthdate: '',
+    phoneNumber: '',
     addressId: 0
   });
-  const [address, setAddress] = useState<Address | null>(null);
+  const [addressInput, setAddressInput] = useState('');
+  const [addressSuggestions, setAddressSuggestions] = useState<any[]>([]);
+  const [address, setAddress] = useState({
+    street: '',
+    city: '',
+    postalCode: '',
+    country: ''
+  });
   const [volunteerShifts, setVolunteerShifts] = useState<VolunteerShift[]>([]);
   const [reports, setReports] = useState<ReportData[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -88,9 +133,7 @@ export const Profile: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    if (profile.addressId) {
-      fetchAddress();
-    }
+   
     if (profile.id) {
       fetchVolunteerShifts();
       fetchReports();
@@ -120,7 +163,24 @@ export const Profile: React.FC = () => {
       if (response.ok) {
         const data = await response.json();
         console.log('User Profile Data:', data);
-        setProfile(data);
+        setProfile({
+          id: data.id,
+          email: data.email,
+          username: data.username,
+          firstname: data.firstName || '',
+          lastname: data.lastName || '',
+          birthdate: data.birthDate || '',
+          phoneNumber: data.phoneNumber || '',
+          addressId: data.addressId || 0,
+          role: data.role || 'USER'
+        });
+        setAddress({
+          street: data.address.street || '',
+          city: data.address.city || '',
+          postalCode: data.address.postalCode || '',
+          country: data.address.country || ''
+        });
+        setAddressInput(data.address.street || '');
         setError(null);
       } else {
         console.error('Failed to fetch profile:', response.status);
@@ -134,7 +194,7 @@ export const Profile: React.FC = () => {
     }
   };
 
-  const fetchAddress = async () => {
+  /*const fetchAddress = async () => {
     try {
       const response = await fetch(`http://localhost:8080/api/address/${profile.addressId}`, {
         headers: {
@@ -148,44 +208,35 @@ export const Profile: React.FC = () => {
     } catch (error) {
       console.error('Greška:', error);
     }
-  };
+  };*/
 
-  const handleAddressSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!address) return;
 
-    try {
-      const response = await fetch(`http://localhost:8080/api/address/${address.id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${Cookies.get('accessToken')}`
-        },
-        body: JSON.stringify(address)
-      });
 
-      if (response.ok) {
-        setSuccessMessage('Adresa uspješno ažurirana!');
-        setShowSuccess(true);
-        setTimeout(() => {
-          setShowSuccess(false);
-        }, 3000);
-      } else {
-        alert('Greška prilikom ažuriranja adrese.');
-      }
-    } catch (error) {
-      console.error('Greška:', error);
-      alert('Došlo je do greške. Pokušajte ponovo kasnije.');
+  const handleStreetInput = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setAddressInput(value);
+    setAddress(prev => ({ ...prev, street: value }));
+    if (value.length < 3) {
+      setAddressSuggestions([]);
+      return;
     }
+    const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(value)}&addressdetails=1`);
+    const data = await res.json();
+    setAddressSuggestions(data);
   };
 
-  const handleAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!address) return;
-    const { name, value } = e.target;
-    setAddress(prev => prev ? {
-      ...prev,
-      [name]: value
-    } : null);
+  const handleAddressSelect = (suggestion: any) => {
+    setAddressInput(
+      (suggestion.address.road || '') +
+      (suggestion.address.house_number ? ' ' + suggestion.address.house_number : '')
+    );
+    setAddressSuggestions([]);
+    setAddress({
+      street: (suggestion.address.road || '') + (suggestion.address.house_number ? ' ' + suggestion.address.house_number : ''),
+      city: suggestion.address.city || suggestion.address.town || suggestion.address.village || '',
+      postalCode: suggestion.address.postcode || '',
+      country: suggestion.address.country || ''
+    });
   };
 
   const fetchVolunteerShifts = async () => {
@@ -206,7 +257,7 @@ export const Profile: React.FC = () => {
 
   const fetchReports = async () => {
     try {
-      const response = await fetch(`http://localhost:8080/reports/user/${profile.id}`, {
+      const response = await fetch(`http://localhost:8080/reports/user/pdf`, {
         headers: {
           'Authorization': `Bearer ${Cookies.get('accessToken')}`
         }
@@ -223,6 +274,21 @@ export const Profile: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
+      console.log(JSON.stringify({
+        firstName: profile.firstname,
+        lastName: profile.lastname,
+        email: profile.email,
+        username: profile.username,
+        phoneNumber: profile.phoneNumber,
+        birthDate: profile.birthdate,
+        address: {
+          street: address.street,
+          city: address.city,
+          postalCode: address.postalCode ? Number(address.postalCode) : undefined,
+          country: address.country
+        },
+        role: profile.role || "USER"
+      }));
       const response = await fetch('http://localhost:8080/api/users/profile', {
         method: 'PUT',
         headers: {
@@ -230,14 +296,27 @@ export const Profile: React.FC = () => {
           'Authorization': `Bearer ${Cookies.get('accessToken')}`
         },
         body: JSON.stringify({
+          firstName: profile.firstname,
+          lastName: profile.lastname,
           email: profile.email,
-          username: profile.username
+          username: profile.username,
+          phoneNumber: profile.phoneNumber,
+          birthDate: profile.birthdate,
+          address: {
+            street: address.street,
+            city: address.city,
+            postalCode: address.postalCode ? Number(address.postalCode) : undefined,
+            country: address.country
+          },
+          role: profile.role || "USER"
         })
       });
   
       if (response.ok) {
+        const data = await response.json();
         setIsEditing(false);
         setSuccessMessage('Profil uspješno ažuriran!');
+        Cookies.set('accessToken', data.accessToken); // Set the new token!
         setShowSuccess(true);
         setTimeout(() => {
           setShowSuccess(false);
@@ -260,25 +339,48 @@ export const Profile: React.FC = () => {
     }));
   };
 
+  const handleDownload = async () => {
+    const response = await fetch('http://localhost:8080/reports/user/pdf/download', {
+      headers: {
+        "Authorization": `Bearer ${Cookies.get('accessToken')}`
+      }
+    });
+    const blob = await response.blob();
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'ukupan-izvjestaj.pdf';
+    a.click();
+    window.URL.revokeObjectURL(url);
+  };
+
   const renderProfileTab = () => (
     <div className={styles.profileTabs}>
-      <div className={styles.profileSection}>
-        <h2>Osnovni podaci</h2>
-        <form onSubmit={handleSubmit} className={styles.form}>
-
-
+      <form onSubmit={handleSubmit} className={styles.form}>
+        <div className={styles.profileSection}>
+          <h2>Osnovni podaci</h2>
           <div className={styles.formGroup}>
-            <label>Email</label>
+            <label>Ime</label>
             <input
-              type="email"
-              name="email"
-              value={profile.email}
+              type="text"
+              name="firstname"
+              value={profile.firstname}
               onChange={handleChange}
               disabled={!isEditing}
               required
             />
           </div>
-
+          <div className={styles.formGroup}>
+            <label>Prezime</label>
+            <input
+              type="text"
+              name="lastname"
+              value={profile.lastname}
+              onChange={handleChange}
+              disabled={!isEditing}
+              required
+            />
+          </div>
           <div className={styles.formGroup}>
             <label>Korisničko ime</label>
             <input
@@ -290,86 +392,59 @@ export const Profile: React.FC = () => {
               required
             />
           </div>
-
-
-
+          <div className={styles.formGroup}>
+            <label>Email</label>
+            <input
+              type="email"
+              name="email"
+              value={profile.email}
+              onChange={handleChange}
+              disabled={!isEditing}
+              required
+            />
+          </div>
+          <div className={styles.formGroup}>
+            <label>Broj telefona</label>
+            <input
+              type="text"
+              name="phoneNumber"
+              value={profile.phoneNumber}
+              onChange={handleChange}
+              disabled={!isEditing}
+              required
+            />
+          </div>
+          <div className={styles.formGroup}>
+            <label>Datum rođenja</label>
+            <input
+              type="date"
+              name="birthdate"
+              value={profile.birthdate}
+              onChange={handleChange}
+              disabled={!isEditing}
+              required
+            />
+          </div>
+        </div>
+        <div className={styles.addressSection}>
+          <h2>Adresa</h2>
+          <AddressForm
+            address={address}
+            onAddressChange={setAddress}
+            addressInput={addressInput}
+            onAddressInputChange={setAddressInput}
+            disabled={!isEditing}
+            isEditing={isEditing}
+          />
           {isEditing && (
-            <button type="submit" className={styles.saveButton}>
-              Spremi promjene
-            </button>
-          )}
-        </form>
-      </div>
-
-      <div className={styles.addressSection}>
-        <h2>Adresa</h2>
-        {address ? (
-          <form onSubmit={handleAddressSubmit} className={styles.form}>
-            <div className={styles.formGroup}>
-              <label>Ulica</label>
-              <input
-                type="text"
-                name="street"
-                value={address.street}
-                onChange={handleAddressChange}
-                disabled={!isEditing}
-                required
-              />
-            </div>
-
-            <div className={styles.formGroup}>
-              <label>Grad</label>
-              <input
-                type="text"
-                name="city"
-                value={address.city}
-                onChange={handleAddressChange}
-                disabled={!isEditing}
-                required
-              />
-            </div>
-
-            <div className={styles.formGroup}>
-              <label>Poštanski broj</label>
-              <input
-                type="text"
-                name="postalCode"
-                value={address.postalCode}
-                onChange={handleAddressChange}
-                disabled={!isEditing}
-                required
-              />
-            </div>
-
-            <div className={styles.formGroup}>
-              <label>Država</label>
-              <input
-                type="text"
-                name="country"
-                value={address.country}
-                onChange={handleAddressChange}
-                disabled={!isEditing}
-                required
-              />
-            </div>
-
-            {isEditing && (
+            <div className={styles.addressActions}>
               <button type="submit" className={styles.saveButton}>
-                Spremi adresu
+                Sačuvaj promjene
               </button>
-            )}
-          </form>
-        ) : (
-          <>
-            <p>Nema dostupne adrese.</p>
-            {profile.addressId ? (
-              <p style={{ color: 'red' }}>
-                (Debug) Pokušavam dohvatiti adresu s ID-jem: {profile.addressId}
-              </p>
-            ) : null}
-          </>
-        )}
-      </div>
+            </div>
+          )}
+        </div>
+      </form>
     </div>
   );
 
@@ -420,25 +495,8 @@ export const Profile: React.FC = () => {
             </div>
           </div>
         ))}
-        
         {/* User's full donation report */}
-        <div className={styles.reportCard}>
-          <div className={styles.reportInfo}>
-            <h3>Ukupan izvještaj donacija</h3>
-            <p>Pregled svih vaših donacija</p>
-          </div>
-          <div className={styles.reportActions}>
-            <a 
-              href={`http://localhost:8080/reports/user/${profile.id}/pdf/download`}
-              className={styles.downloadButton}
-            >
-              Preuzmi ukupan izvještaj
-            </a>
-          </div>
-          <div className={styles.pdfPreview}>
-            <PdfPreview userId={profile.id} />
-          </div>
-        </div>
+        <PdfPreview userId={profile.id} />
       </div>
     </div>
   );
@@ -494,8 +552,9 @@ export const Profile: React.FC = () => {
           <div className={styles.tabContent}>
             {activeTab === 'profile' && renderProfileTab()}
             {activeTab === 'volunteer' && renderVolunteerTab()}
-            {activeTab === 'reports' && renderReportsTab()}
+            
           </div>
+          {activeTab === 'reports' && renderReportsTab()}
         </div>
       )}
     </div>

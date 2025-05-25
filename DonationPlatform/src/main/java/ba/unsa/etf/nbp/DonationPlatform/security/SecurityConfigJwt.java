@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -30,7 +31,6 @@ public class SecurityConfigJwt {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        // TO-DO: REMOVE REPORTS PDF FROM HERE
         http
                 .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Omogući CORS
                 .csrf(csrf -> csrf.disable())
@@ -40,11 +40,20 @@ public class SecurityConfigJwt {
                         .requestMatchers("/api/users/login").permitAll()
                         .requestMatchers("/api/users/me").permitAll()
                         .requestMatchers("/api/users/register").permitAll()
+                        .requestMatchers("/api/users/username/**").hasAnyRole("ADMIN","VOLONTER","DONATOR")
+                        .requestMatchers(HttpMethod.GET, "/api/events/**").permitAll()
+                        .requestMatchers(HttpMethod.PUT, "/api/events/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/events/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/events/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/campaign/**").permitAll()
+                        .requestMatchers(HttpMethod.PUT, "/api/campaign/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/campaign/**").hasRole("ADMIN")
+                        .requestMatchers("/api/users/profile").hasAnyRole("ADMIN","VOLONTER","DONATOR")
                         .requestMatchers("/api/users/**").permitAll()
                         .requestMatchers("/api/reports/**").permitAll()
-                        .requestMatchers("/reports/user/**").permitAll()
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/api/address/**").permitAll()
+                        .requestMatchers("/reports/user/**").hasAnyRole("ADMIN","VOLONTER","DONATOR")
                         .requestMatchers(GET,"/api/users/users").hasRole("ADMIN")
                         .requestMatchers("/api/user/logout").hasAnyRole("ADMIN","VOLONTER","DONATOR")
                         .anyRequest().authenticated()

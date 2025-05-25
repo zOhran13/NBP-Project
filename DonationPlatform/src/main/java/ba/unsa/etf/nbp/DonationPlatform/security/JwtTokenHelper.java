@@ -2,6 +2,7 @@ package ba.unsa.etf.nbp.DonationPlatform.security;
 
 import ba.unsa.etf.nbp.DonationPlatform.dto.UserDTO;
 import ba.unsa.etf.nbp.DonationPlatform.dto.RoleDTO;
+import ba.unsa.etf.nbp.DonationPlatform.model.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -26,7 +27,7 @@ public class JwtTokenHelper {
         this.key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
     }
 
-    public String generateToken(UserDTO user, RoleDTO role) {
+    public String generateToken(User user, RoleDTO role) {
         Date now = new Date();
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(now);
@@ -69,14 +70,6 @@ public class JwtTokenHelper {
         } catch (Exception ex) {
             return false;
         }
-    }
-
-    public String getUsernameFromToken(String token) {
-        if (key == null) {
-            init();
-        }
-
-        return getClaimsFromToken(token).getSubject();
     }
 
     public Claims getClaimsFromToken(String token) {

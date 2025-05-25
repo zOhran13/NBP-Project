@@ -1,5 +1,6 @@
 package ba.unsa.etf.nbp.DonationPlatform.request;
 
+import ba.unsa.etf.nbp.DonationPlatform.dto.AddressDTO;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,7 +15,7 @@ public class RegisterUserRequest {
         private String username;
         private String phoneNumber;
         private LocalDate birthDate;
-        private Long addressId;
+        private AddressDTO address;
         private Long roleId;
 
 }

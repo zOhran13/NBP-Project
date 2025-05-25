@@ -1,0 +1,309 @@
+.aboutUsContainer {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0rem;
+}
+
+.hero {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: top;
+  min-height: 350px;
+  padding: 0rem 0;
+  margin-bottom: 0;
+  background: linear-gradient(rgba(0,0,0, 0.841), rgba(8, 73, 38, 0.595)), url('../../../assets/images/about-hero.png') center/cover no-repeat;
+  color: white;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.heroContent {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  text-align: center;
+}
+
+.hero h1 {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.subtitle {
+  font-size: 1.5rem;
+  opacity: 0.9;
+}
+
+.mission {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  margin-bottom: 0;
+  padding-bottom: 2rem;
+}
+
+.missionContent {
+  flex: 1;
+  text-align: center;
+  margin-bottom: 0rem;
+  padding-bottom: 0rem;
+}
+
+.mission h2 {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+  color: var(--color-primary-main);
+  text-align: left;
+}
+
+.mission p {
+  font-size: 1.2rem;
+  line-height: 1.6;
+  color: #333;
+  text-align: left;
+  margin-bottom: 0rem;
+}
+
+.missionImage {
+  flex-shrink: 0;
+  width: 400px;
+  height: 400px;
+  overflow: hidden;
+  border-radius: 8px;
+  opacity: 0.9;
+  transition: opacity 0.3s ease;
+}
+
+.missionImage:hover {
+  opacity: 1;
+}
+
+.missionImage img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.programs {
+  margin-top: 0rem;
+  margin-bottom: 0rem;
+  padding-top: 0rem;
+  justify-content: center;
+}
+
+.programs h2 {
+  text-align: left;
+  font-size: 2.5rem;
+  color: var(--color-primary-main);
+  margin-bottom: 1.5rem;
+}
+
+.programGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+}
+
+.programCard {
+  background: white;
+
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.programCard:hover {
+  transform: translateY(-5px);
+}
+
+.programCard h3 {
+  color: #333;
+  margin-bottom: 1rem;
+  text-align: left;
+  font-size: 1.5rem;
+}
+
+.programCard p {
+  color: #666;
+  text-align: left;
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+}
+.values h2 {
+  text-align: left;
+  font-size: 2.5rem;
+  color: var(--color-primary-main);
+  margin-bottom: 1.5rem;
+}
+.learnMore {
+  color: #4CAF50;
+  text-decoration: none;
+  font-weight: 500;
+  display: inline-block;
+  transition: color 0.3s ease;
+}
+
+.learnMore:hover {
+  color: #388E3C;
+}
+
+.values {
+  margin-bottom: 4rem;
+}
+
+.valuesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+}
+
+.valueCard {
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+  text-align: left;
+}
+
+.valueCard:hover {
+  transform: translateY(-5px);
+}
+
+.valueCard h3 {
+  color: #333;
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+  text-align: left;
+}
+
+.valueCard p {
+  color: #666;
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+  text-align: left;
+}
+
+.valueIcon {
+  margin-bottom: 1rem;
+  width: 48px;
+  height: 48px;
+}
+
+.valueIcon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.footerSection ul {
+  list-style: none;
+  padding: 0;
+  margin: 50px;
+}
+
+.footerSection ul li {
+  margin-bottom: 0.5rem;
+}
+
+.footerSection ul li a {
+  color: #000000;
+  text-decoration: none;
+  transition: color 0.3s ease;
+  font-size: 0.9rem;
+}
+
+.footerSection ul li a:hover {
+  color: #4CAF50;
+}
+
+.contactInfo li {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #333;
+  font-size: 1.1rem;
+}
+
+.contactInfo i {
+  color: #4CAF50;
+  font-size: 1rem;
+  width: 20px;
+}
+
+.contact {
+  text-align: left;
+  padding: 3rem;
+  background: #f5f5f5;
+  border-radius: 8px;
+}
+
+.contact h2 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  color: var(--color-primary-main);
+}
+
+.contact p {
+  color: #666;
+  margin-bottom: 2rem;
+  font-size: 1.1rem;
+}
+
+.contactButton {
+  display: inline-block;
+  padding: 1rem 2rem;
+  background: #4CAF50;
+  color: white;
+  text-decoration: none;
+  border-radius: 4px;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+}
+
+.contactButton:hover {
+  background: #388E3C;
+}
+
+@media (max-width: 768px) {
+  .hero {
+    padding: 3rem 1rem;
+  }
+
+  .hero h1 {
+    font-size: 2.5rem;
+  }
+
+  .subtitle {
+    font-size: 1.2rem;
+  }
+
+  .mission {
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .missionContent {
+    order: 2;
+  }
+
+  .missionImage {
+    order: 1;
+    width: 150px;
+    height: 150px;
+  }
+
+  .mission h2,
+  .programs h2,
+  .values h2,
+  .contact h2 {
+    font-size: 2rem;
+  }
+
+  .programGrid,
+  .valuesGrid {
+    grid-template-columns: 1fr;
+  }
+} 

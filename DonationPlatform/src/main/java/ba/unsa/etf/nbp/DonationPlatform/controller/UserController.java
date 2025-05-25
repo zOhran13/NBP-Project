@@ -17,6 +17,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,13 +31,7 @@ public class UserController {
     @Autowired
     private UserService userService;
     @Autowired
-    private PasswordEncoder passwordEncoder;
-    @Autowired
-
-    private  JwtTokenHelper tokenHelper;
-    @Autowired
-    private RoleService roleService;
-
+    private JwtTokenHelper tokenHelper;
     @Autowired
     private RevokedTokenRepository revokedTokenRepository;
 
@@ -46,16 +41,16 @@ public class UserController {
         List<UserDTO> userDTOList = userService.getAllUsers();
         return ResponseEntity.ok(userDTOList);
     }
-    @GetMapping("/username/{username}")
-    public ResponseEntity<UserDTO> getUserByUsername(@PathVariable String username) {
-        return userService.getUserByUsername(username)
+    @GetMapping("/user")
+    public ResponseEntity<UserDTO> getUserByUsername() {
+        return userService.getUser()
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody RegisterUserRequest user) {
         try {
-            User saved = userService.registerUser(user);
+            UserDTO saved = userService.registerUser(user);
             return ResponseEntity.ok(saved);
         } catch (RuntimeException ex) {
             return ResponseEntity.badRequest().body(ex.getMessage());
@@ -64,19 +59,14 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginUserRequest loginRequestDto) {
-        // Fetch user by email
-        UserDTO user = userService.getUserByEmail(loginRequestDto.getEmail());
-        if (user != null && passwordEncoder.matches(loginRequestDto.getPassword(), user.getPassword())) {
-            // If user exists and password matches, fetch role and generate token
-            Optional<RoleDTO> userRole = roleService.getRoleByName(user.getRole());
-            String token = tokenHelper.generateToken(user, userRole.orElse(null));
-            return ResponseEntity.ok(new LoginResponse(token));
+        LoginResponse response = userService.login(loginRequestDto);
+
+        if (response != null) {
+            return ResponseEntity.ok(response);
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-
-        // Return unauthorized if authentication fails
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
-
 
     @PostMapping("/validate-token")
     public ResponseEntity<Void> validateToken(
@@ -104,45 +94,28 @@ public class UserController {
     }
     @PutMapping("/profile")
     public ResponseEntity<?> updateProfile(@RequestHeader("Authorization") String authHeader,
-                                           @RequestBody Map<String, String> updateRequest) {
+                                           @RequestBody UserDTO updateRequest) {
         try {
-
+            // Extract email from JWT token
             String token = authHeader.replace("Bearer ", "");
-            String emailFromToken = tokenHelper.getClaimsFromToken(token).get("email", String.class);
+            String originalEmail = tokenHelper.getClaimsFromToken(token).get("email", String.class);
 
+            // Call service to update profile (will validate username and update user)
+            LoginResponse loginResponse = userService.updateUserProfile(originalEmail, updateRequest);
 
-            UserDTO existingUser = userService.getUserByEmail(emailFromToken);
+            return ResponseEntity.ok(loginResponse);
 
-            if (existingUser == null) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
-            }
-
-            String newEmail = updateRequest.get("email");
-            String newUsername = updateRequest.get("username");
-            //String newAddress = updateRequest.get("address");
-
-
-            if (newEmail != null && !newEmail.isBlank()) {
-                existingUser.setEmail(newEmail);
-            }
-            if (newUsername != null && !newUsername.isBlank()) {
-                existingUser.setUsername(newUsername);
-            }
-            /*if (newAddress != null && !newAddress.isBlank()) {
-               existingUser.setAddress(newAddress);
-            }*/
-
-
-            UserDTO updatedUser = userService.updateUserProfile(existingUser);
-
-
-            return ResponseEntity.ok(updatedUser);
-
+        } catch (UsernameNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error updating profile");
         }
     }
+
+
 
     @GetMapping("/me")
     public ResponseEntity<?> getCurrentUserProfile(@RequestHeader("Authorization") String authHeader) {
@@ -152,21 +125,14 @@ public class UserController {
 
             // Get email from token
             String email = tokenHelper.getClaimsFromToken(token).get("email", String.class);
-            System.out.println("Email from token: " + email); // Debug log
-
+            System.out.println("Email from token: " + email); //
             try {
                 // Get user by email using the existing method
                 UserDTO user = userService.getUserByEmail(email);
 
                 // Create a response object with only the necessary user information
                 Map<String, Object> response = new HashMap<>();
-                response.put("id", user.getId());
-                response.put("email", user.getEmail());
-                response.put("username", user.getUsername());
-                response.put("addressId", user.getAddress());
-
-                System.out.println("Found user: " + user.getEmail()); // Debug log
-                return ResponseEntity.ok(response);
+                return ResponseEntity.ok(user);
             } catch (RuntimeException e) {
                 System.out.println("User not found for email: " + email); // Debug log
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");

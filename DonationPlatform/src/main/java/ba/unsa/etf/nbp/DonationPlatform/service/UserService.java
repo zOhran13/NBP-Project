@@ -1,5 +1,8 @@
 package ba.unsa.etf.nbp.DonationPlatform.service;
 
+import ba.unsa.etf.nbp.DonationPlatform.dto.RoleDTO;
+import ba.unsa.etf.nbp.DonationPlatform.mapper.AddressMapper;
+import ba.unsa.etf.nbp.DonationPlatform.mapper.RoleMapper;
 import ba.unsa.etf.nbp.DonationPlatform.mapper.UserMapper;
 import ba.unsa.etf.nbp.DonationPlatform.model.*;
 import ba.unsa.etf.nbp.DonationPlatform.dto.UserDTO;
@@ -7,12 +10,18 @@ import ba.unsa.etf.nbp.DonationPlatform.repository.AddressRepository;
 import ba.unsa.etf.nbp.DonationPlatform.repository.PasswordTokenRepository;
 import ba.unsa.etf.nbp.DonationPlatform.repository.RoleRepository;
 import ba.unsa.etf.nbp.DonationPlatform.repository.UserRepository;
+import ba.unsa.etf.nbp.DonationPlatform.request.LoginUserRequest;
 import ba.unsa.etf.nbp.DonationPlatform.request.RegisterUserRequest;
+import ba.unsa.etf.nbp.DonationPlatform.response.LoginResponse;
+import ba.unsa.etf.nbp.DonationPlatform.security.JwtTokenHelper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -30,10 +39,33 @@ public class UserService {
     @Autowired
     private UserMapper userMapper;
     @Autowired
+    private AddressMapper addressMapper;
+    @Autowired
+    private JwtTokenHelper tokenHelper;
+    @Autowired
+    private RoleService roleService;
+    @Autowired
     private PasswordTokenRepository passwordTokenRepository;
+    @Autowired
+    private RoleMapper roleMapper;
 
     public UserService(PasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;
+    }
+    public LoginResponse login(LoginUserRequest loginRequestDto) {
+        Optional<User> userOptional = userRepository.findByEmail(loginRequestDto.getEmail());
+
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+
+            if (passwordEncoder.matches(loginRequestDto.getPassword(), user.getPassword())) {
+                RoleDTO roleDto = roleService.getRoleByName(user.getRole().getName()).orElse(null);
+                String token = tokenHelper.generateToken(user, roleDto);
+                return new LoginResponse(token);
+            }
+        }
+
+        return null;
     }
 
     public List<UserDTO> getAllUsers() {
@@ -41,54 +73,75 @@ public class UserService {
 
         return users.stream()
                 .map(user -> new UserDTO(
-                        user.getId(),
+                        user.getFirstName(),
+                        user.getLastName(),
                         user.getUsername(),
                         user.getEmail(),
-                        user.getPassword(),
-                        user.getRole().getName(),
-                        user.getAddressId() != null
-                                ? addressRepository.findById(user.getAddressId())
-                                .map(Address::getStreet)
-                                .orElse("No address")
-                                : "No address"
+                        user.getPhoneNumber(),
+                        user.getBirthDate(),
+                        addressRepository.findById(user.getAddressId()).map(addressMapper::mapToAddressDto).orElse(null),
+                        user.getRole().getName()
 
 
                 ))
                 .collect(Collectors.toList());
     }
 
-    public Optional<UserDTO> getUserByUsername(String username) {
+    public Optional<UserDTO> getUser() {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
         return userRepository.findByUsername(username)
-                .map(user -> new UserDTO(
-                        user.getId(),
-                        user.getUsername(),
-                        user.getEmail(),
-                        user.getRole().getName(),
-                        user.getPassword(),
-                        user.getAddressId() != null
-                                ? addressRepository.findById(user.getAddressId())
-                                .map(Address::getStreet)
-                                .orElse("No address")
-                                : "No address"
-                ));
-    }
-    public UserDTO updateUserProfile(UserDTO updatedUserDTO) {
-        User existingUser = userRepository.findById(updatedUserDTO.getId())
-                .orElseThrow(() -> new RuntimeException("User not found"));
-
-        existingUser.setEmail(updatedUserDTO.getEmail());
-        existingUser.setUsername(updatedUserDTO.getUsername());
-        // Ako ima addressId u DTO-u
-        //existingUser.setAddressId(Long.valueOf(updatedUserDTO.getAddress()));
-
-        User updatedUser = userRepository.save(existingUser);
-        return userMapper.mapToUserDto(updatedUser);
+                .map(userMapper::mapToUserDto);
     }
 
+    public LoginResponse updateUserProfile(String originalEmail, UserDTO updateRequest) {
+        // 1. Find user by original email
+        User user = userRepository.findByEmail(originalEmail)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        // 2. Check if new username exists (and belongs to someone else)
+        if (!updateRequest.getUsername().equals(user.getUsername())) {
+            if (userRepository.existsByUsername(updateRequest.getUsername())) {
+                throw new IllegalArgumentException("Username already exists");
+            }
+        }
+        user.setFirstName(updateRequest.getFirstName());
+        user.setLastName(updateRequest.getLastName());
+        user.setUsername(updateRequest.getUsername());
+        user.setEmail(updateRequest.getEmail());
+        user.setPhoneNumber(updateRequest.getPhoneNumber());
+        user.setBirthDate(updateRequest.getBirthDate());
+        if (updateRequest.getAddress() != null) {
+            Address address = addressMapper.mapToAddress(updateRequest.getAddress());
+
+            // Optional: check for an existing address before saving (e.g. by street)
+            Address existing = addressRepository.findAddressesByStreet(address.getStreet())
+                    .stream()
+                    .findFirst()
+                    .orElse(null);
+
+            if (existing == null) {
+                existing = addressRepository.save(address);
+            }
+
+            user.setAddressId(existing.getId());
+
+
+            if (existing == null) {
+                existing = addressRepository.save(address);
+            }
+
+            user.setAddressId(existing.getId());
+        }
+        // 4. Save user
+        userRepository.save(user);
+
+        // 5. Return new LoginResponse (you may want to regenerate token here)
+        return new LoginResponse(tokenHelper.generateToken(user, roleMapper.mapToRoleDTO(user.getRole())));
+    }
 
 
 
-    public User registerUser(RegisterUserRequest request) {
+
+    public UserDTO registerUser(RegisterUserRequest request) {
         if (userRepository.findByEmail(request.getEmail()).isPresent()) {
             throw new RuntimeException("Email already in use.");
         }
@@ -96,8 +149,12 @@ public class UserService {
         if (userRepository.findByUsername(request.getUsername()).isPresent()) {
             throw new RuntimeException("Username already taken.");
         }
-
-        Address address = addressRepository.findById(request.getAddressId()).orElseThrow(() -> new RuntimeException("Address ID is not valid."));
+        Address address = new Address();
+        address.setCountry(request.getAddress().getCountry());
+        address.setCity(request.getAddress().getCity());
+        address.setPostalCode(request.getAddress().getPostalCode());
+        address.setStreet(request.getAddress().getStreet());
+        addressRepository.save(address);
 
         Role role = roleRepository.findById(request.getRoleId()).orElseThrow(() -> new RuntimeException("Role Id is not valid."));
 
@@ -110,17 +167,12 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setPhoneNumber(request.getPhoneNumber());
         user.setBirthDate(request.getBirthDate());
-
-// Address handling
-        String street = Optional.ofNullable(user.getAddressId())
-                .flatMap(addressRepository::findById)
-                .map(Address::getStreet)
-                .orElse("No address");
-
+        user.setAddressId(address.getId());
         user.setRole(role);
-        return userRepository.save(user);
+        userRepository.save(user);
+        return userMapper.mapToUserDto(user);
     }
-    public User changeUserRole(Long userId, String roleName) {
+    public UserDTO changeUserRole(Long userId, String roleName) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
@@ -128,7 +180,8 @@ public class UserService {
                 .orElseThrow(() -> new RuntimeException("Role not found"));
 
         user.setRole(newRole);
-        return userRepository.save(user);
+        userRepository.save(user);
+        return userMapper.mapToUserDto(user);
     }
 
 

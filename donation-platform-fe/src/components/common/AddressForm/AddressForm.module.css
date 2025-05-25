@@ -1,0 +1,74 @@
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0rem;
+  margin-bottom: 0.2rem;
+  padding: 0rem;
+}
+
+.addressInput {
+  width: 100%;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+  background: #fff;
+  transition: border 0.2s, box-shadow 0.2s;
+  outline: none;
+  margin-bottom: 0.75rem;
+  padding: 0.75rem;
+}
+
+.addressInput:focus {
+  border-color: var(--color-primary-main, #388E3C);
+  box-shadow: 0 2px 8px rgba(56, 142, 60, 0.08);
+}
+
+.suggestionsList {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  background: white;
+  border: 1px solid #ccc;
+  border-top: none;
+  border-radius: 0 0 6px 6px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+  max-height: 220px;
+  overflow-y: auto;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.suggestionsList li {
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  font-size: 1rem;
+  color: #222;
+  transition: background 0.2s;
+  display: flex;
+  align-items: center;
+}
+
+.suggestionsList li:hover {
+  background: var(--color-primary-light, #e6f4ea);
+}
+
+.formGroup label {
+font-weight: 500;
+  color: #388E3C;
+  font-size: 1.02rem;
+}
+
+.formGroup input[disabled] {
+  background-color: #f5f5f5;
+  color: #888;
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: border 0.2s, box-shadow 0.2s;
+  outline: none;
+  margin-bottom: 0.75rem;
+} 

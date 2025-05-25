@@ -30,7 +30,7 @@ public class AddressService {
     public Optional<Address> getAddressById(Long id) {
         return repository.findById(id);
     }
-
+    public Optional<Address> getAddressByStreet(String street) {return Optional.ofNullable((Address) repository.findAddressesByStreet(street).stream().findFirst().orElse(null));}
     // UPDATE
     public Address updateAddress(Long id, Address updatedAddress) {
         return repository.findById(id)

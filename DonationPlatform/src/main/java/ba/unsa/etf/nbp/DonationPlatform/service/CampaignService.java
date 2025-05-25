@@ -2,6 +2,7 @@ package ba.unsa.etf.nbp.DonationPlatform.service;
 
 import ba.unsa.etf.nbp.DonationPlatform.model.Campaign;
 import ba.unsa.etf.nbp.DonationPlatform.repository.CampaignRepository;
+import ba.unsa.etf.nbp.DonationPlatform.repository.DonationRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,8 +13,11 @@ public class CampaignService {
 
     private final CampaignRepository campaignRepository;
 
-    public CampaignService(CampaignRepository campaignRepository) {
+    private final DonationRepository donationRepository;
+
+    public CampaignService(CampaignRepository campaignRepository, DonationRepository donationRepository) {
         this.campaignRepository = campaignRepository;
+        this.donationRepository = donationRepository;
     }
 
     // CREATE
@@ -50,5 +54,11 @@ public class CampaignService {
             throw new RuntimeException("Campaign not found with id " + id);
         }
         campaignRepository.deleteById(id);
+    }
+
+
+    public Double getAmountDonatedForCampaign(Long campaignId) {
+        Double sum = donationRepository.getTotalAmountDonatedForCampaign(campaignId);
+        return sum != null ? sum : 0.0;
     }
 }
