@@ -26,7 +26,19 @@ public class EmailService {
                 + "<a href=\"" + resetUrl + "\">Resetuj lozinku</a>";
         Content content = new Content("text/html", contentString);
 
-        Mail mail = new Mail(from, subject, toEmail, content);
+       sendMail(from, subject, toEmail, content);
+    }
+
+    public void sendHtmlEmail(String to, String subject, String htmlContent) {
+        Email from = new Email(senderEmail);
+        Email toEmail = new Email(to);
+        Content content = new Content("text/html", htmlContent);
+
+        sendMail(from, subject, toEmail, content);
+    }
+
+    private void sendMail(Email from, String subject, Email to, Content content) {
+        Mail mail = new Mail(from, subject, to, content);
         SendGrid sg = new SendGrid(sendGridApiKey);
         Request request = new Request();
 
@@ -36,12 +48,20 @@ public class EmailService {
             request.setBody(mail.build());
             Response response = sg.api(request);
 
+            System.out.println("Email poslan na: " + to.getEmail());
             System.out.println("Status: " + response.getStatusCode());
             System.out.println("Body: " + response.getBody());
             System.out.println("Headers: " + response.getHeaders());
 
+            if (response.getStatusCode() >= 200 && response.getStatusCode() < 300) {
+                System.out.println("Email uspješno poslan!");
+            } else {
+                System.err.println("Greška prilikom slanja emaila. Status kod: " + response.getStatusCode() + ", Odgovor: " + response.getBody());
+            }
+
         } catch (IOException e) {
-            System.err.println("Greška prilikom slanja e-maila: " + e.getMessage());
+            System.err.println("Error prilikom slanja e-maila: " + e.getMessage());
+            throw new RuntimeException("Neuspješno slanje emaila", e);
         }
     }
 }

@@ -98,6 +98,16 @@ public class UserSeeder implements CommandLineRunner {
             } else {
                 System.out.println("User vol2 already exists, skipping.");
             }
+            if (!userRepository.existsByUsername("vol3")) {
+                User volonter3 = createUser(
+                        "Volonter", "3", "nbp03.notification@gmail.com", "vol3",
+                        "Vol2123!", addresses.get(2), role
+                );
+                userRepository.save(volonter3);
+                System.out.println("Seeded user vol3.");
+            } else {
+                System.out.println("User vol3 already exists, skipping.");
+            }
         });
     }
 

@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface VolunteerRepository extends JpaRepository<VolunteerShift, Long> {
     List<VolunteerShift> findByUserId(Long userId);
+    List<VolunteerShift> findByEventId(Long eventId);
 }

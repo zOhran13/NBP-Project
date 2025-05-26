@@ -27,7 +27,7 @@ public class EventSeeder implements CommandLineRunner {
         if (eventRepository.count() == 0) {
             List<Event> events = Arrays.asList(
                     new Event("Humanitarni koncert 'Niste sami'", "https://balkans.aljazeera.net/wp-content/uploads/2024/10/461994187_945545787592632_4959838251416091077_n-1728026144.jpg?resize=770%2C513&quality=80",
-                            getDate(2024, Calendar.NOVEMBER, 28), "Zenica",
+                            getDate(2025, Calendar.MAY, 27), "Zenica",
                             "Koncert za pomoć područjima pogođenim poplavama, uz nastupe poznatih regionalnih izvođača.",
                             50L, 10000.0),
                     new Event("Humanitarna večer 'Za naše ljude'", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRAG6w2uWQv0dmAAEbRQ0Jsq4Zh-mNzvA3U1w&s",
