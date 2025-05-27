@@ -1,5 +1,6 @@
 package ba.unsa.etf.nbp.DonationPlatform.service;
 
+import ch.qos.logback.classic.Logger;
 import com.sendgrid.*;
 import com.sendgrid.helpers.mail.Mail;
 import com.sendgrid.helpers.mail.objects.Content;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.List;
 
 @Service
 public class EmailService {
@@ -28,7 +30,6 @@ public class EmailService {
 
        sendMail(from, subject, toEmail, content);
     }
-
     public void sendHtmlEmail(String to, String subject, String htmlContent) {
         Email from = new Email(senderEmail);
         Email toEmail = new Email(to);
@@ -36,7 +37,6 @@ public class EmailService {
 
         sendMail(from, subject, toEmail, content);
     }
-
     private void sendMail(Email from, String subject, Email to, Content content) {
         Mail mail = new Mail(from, subject, to, content);
         SendGrid sg = new SendGrid(sendGridApiKey);

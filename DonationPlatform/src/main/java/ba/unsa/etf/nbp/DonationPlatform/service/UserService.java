@@ -27,7 +27,6 @@ import java.util.stream.Collectors;
 
 @Service
 public class UserService {
-
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -48,7 +47,6 @@ public class UserService {
     private PasswordTokenRepository passwordTokenRepository;
     @Autowired
     private RoleMapper roleMapper;
-
     public UserService(PasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;
     }
@@ -67,7 +65,6 @@ public class UserService {
 
         return null;
     }
-
     public List<UserDTO> getAllUsers() {
         List<User> users = userRepository.findAll();
 
@@ -86,13 +83,11 @@ public class UserService {
                 ))
                 .collect(Collectors.toList());
     }
-
     public Optional<UserDTO> getUser() {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         return userRepository.findByUsername(username)
                 .map(userMapper::mapToUserDto);
     }
-
     public LoginResponse updateUserProfile(String originalEmail, UserDTO updateRequest) {
         // 1. Find user by original email
         User user = userRepository.findByEmail(originalEmail)
@@ -138,9 +133,6 @@ public class UserService {
         return new LoginResponse(tokenHelper.generateToken(user, roleMapper.mapToRoleDTO(user.getRole())));
     }
 
-
-
-
     public UserDTO registerUser(RegisterUserRequest request) {
         if (userRepository.findByEmail(request.getEmail()).isPresent()) {
             throw new RuntimeException("Email already in use.");
@@ -184,14 +176,9 @@ public class UserService {
         return userMapper.mapToUserDto(user);
     }
 
-
-
     public UserDTO getUserByEmail(String email) {
         return userRepository.findByEmail(email)
                 .map(userMapper::mapToUserDto)
                 .orElseThrow(() -> new RuntimeException("User not found with email: " + email));
     }
-
-
-
 }
