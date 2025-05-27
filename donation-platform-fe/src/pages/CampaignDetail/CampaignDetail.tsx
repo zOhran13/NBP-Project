@@ -69,7 +69,7 @@ const CampaignDetail: React.FC = () => {
 
   return (
     <div className={styles.container}>
-      <div className={styles.hero} style={{ backgroundImage: `url(${campaign.imageLink})` }}>
+      <div className={styles.hero} style={{ backgroundImage: `url(${campaign.image})` }}>
         <div className={styles.heroContent}>
           <h1>{campaign.name}</h1>
         </div>

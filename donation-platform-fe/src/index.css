@@ -51,3 +51,15 @@ button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 } 
+
+.Toastify {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  display: contents;
+}
+
+.Toastify__toast-container {
+  pointer-events: auto;
+}

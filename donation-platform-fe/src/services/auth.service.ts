@@ -44,6 +44,8 @@ export const login = async (credentials: LoginCredentials): Promise<{ accessToke
   }
   const user = await userRes.json();
   Cookies.set('username', user.username); // or whatever field is the username
+  Cookies.set('userRole', user.role); 
+
 
   return data;
 };
