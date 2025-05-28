@@ -3,7 +3,7 @@ import { API_CONFIG } from '../config/api.config';
 export interface Campaign {
   id: number;
   name: string;
-  imageLink: string;
+  image: string;
   startDate: string;
   endDate: string;
   targetAmount: number;
@@ -51,3 +51,23 @@ export const getCampaignDonatedAmount = async (campaignId: number): Promise<numb
     return 0;
   }
 };
+export const createCampaign = async (
+  name: string,
+  image: File,
+  startDate: string,
+  endDate: string,
+  targetAmount: string
+): Promise<Response> => {
+  const formData = new FormData();
+  formData.append('name', name);
+  formData.append('image', image);
+  formData.append('startDate', startDate);
+  formData.append('endDate', endDate);
+  formData.append('targetAmount', targetAmount);
+
+  return await fetch('/api/campaign', {
+    method: 'POST',
+    body: formData
+  });
+};
+

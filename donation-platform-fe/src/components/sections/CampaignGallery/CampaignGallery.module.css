@@ -255,3 +255,30 @@
     font-size: 1.2rem;
   }
 } 
+.headerRow {
+  display: flex;
+  align-items: center; 
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.plusButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background-color: #4CAF50;
+  color: white;
+  border-radius: 12px;
+  border: 2px solid #e0e0e0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  text-decoration: none;
+  transition: background-color 0.2s ease;
+  cursor: pointer;
+}
+
+.plusButton:hover {
+  background-color: #43a047;
+}
+

@@ -114,4 +114,7 @@ public class CampaignService {
         Double sum = donationRepository.getTotalAmountDonatedForCampaign(campaignId);
         return sum != null ? sum : 0.0;
     }
+    public Optional<Campaign> findById (Long campaignId){
+        return campaignRepository.findById(campaignId);
+    }
 }

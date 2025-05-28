@@ -15,15 +15,17 @@ public class Campaign {
     private Long id;
 
     private String name;
-    private String imageLink;
+    @Lob
+    @Column(name = "image", columnDefinition = "BLOB")
+    private byte[] image;
     private Date startDate;
     private Date endDate;
     private Double targetAmount;
 
 
-    public Campaign(String name, String imageLink, Date startDate, Date endDate, Double targetAmount) {
+    public Campaign(String name, byte[] image, Date startDate, Date endDate, Double targetAmount) {
         this.name = name;
-        this.imageLink = imageLink;
+        this.image = image;
         this.startDate = startDate;
         this.endDate = endDate;
         this.targetAmount = targetAmount;

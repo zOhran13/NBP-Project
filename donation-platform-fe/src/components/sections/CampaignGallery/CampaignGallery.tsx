@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { getCampaigns, getCampaignDonatedAmount, Campaign } from '../../../services/campaign.service';
 import styles from './CampaignGallery.module.css';
+import Cookies from 'js-cookie';
+import { Plus } from 'lucide-react';
 
 interface CampaignWithDonations extends Campaign {
   donatedAmount: number;
@@ -17,6 +19,11 @@ export const CampaignGallery: React.FC = () => {
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
   const [scrollLeft, setScrollLeft] = useState(0);
+
+  const role = Cookies.get('userRole');
+  const navigate = useNavigate();
+const location = useLocation();
+const successMessage = location.state?.successMessage;
 
   useEffect(() => {
     const fetchCampaigns = async () => {
@@ -121,7 +128,15 @@ export const CampaignGallery: React.FC = () => {
 
   return (
     <section className={styles.gallery}>
+      <div className={styles.headerRow}>
       <h2 className={styles.naslov}>Aktivne Kampanje</h2>
+      {role === 'Admin' && (
+        <Link to="/create-campaign" className={styles.plusButton}>
+          <Plus size={22} strokeWidth={3} />
+        </Link>
+      )}
+    </div>
+
       <p className={styles.podnaslov}>
         Pogledajte naše trenutne kampanje i pridružite se u stvaranju pozitivnih promjena.
       </p>
@@ -147,7 +162,7 @@ export const CampaignGallery: React.FC = () => {
               <div key={campaign.id} className={styles.campaignCard}>
                 <div className={styles.imageWrapper}>
                   <img 
-                    src={campaign.imageLink} 
+                    src={campaign.image} 
                     alt={campaign.name} 
                     className={styles.image}
                     loading="lazy"
