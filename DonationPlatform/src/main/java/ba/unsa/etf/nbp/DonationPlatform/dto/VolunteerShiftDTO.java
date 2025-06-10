@@ -10,6 +10,5 @@ public class VolunteerShiftDTO {
     private LocalTime shiftStart;
     private LocalTime  shiftEnd;
     private Long hoursWorked;
-    private Long userId;
     private Long eventId;
 }
