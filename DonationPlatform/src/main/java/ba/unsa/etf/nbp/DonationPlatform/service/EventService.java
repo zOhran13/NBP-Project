@@ -32,7 +32,8 @@ public class EventService {
                 .orElseThrow(() -> new RuntimeException("Event not found"));
 
         existing.setTitle(eventDetails.getTitle());
-        existing.setEventDate(eventDetails.getEventDate());
+        existing.setEventStart(eventDetails.getEventStart());
+        existing.setEventEnd(eventDetails.getEventEnd());
         existing.setLocation(eventDetails.getLocation());
         existing.setDescription(eventDetails.getDescription());
         existing.setVolunteerGoal(eventDetails.getVolunteerGoal());

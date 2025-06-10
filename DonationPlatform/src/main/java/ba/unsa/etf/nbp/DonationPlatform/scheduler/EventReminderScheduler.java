@@ -35,8 +35,8 @@ public class EventReminderScheduler {
         System.out.println("Provjeravam događaje zakazane za: " + tomorrow.format(DATE_FORMATTER));
 
         List<EventParticipation> participationsForTomorrow = eventParticipationRepository.findAll().stream()
-                .filter(ep -> ep.getEvent().getEventDate() != null &&
-                        ep.getEvent().getEventDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().isEqual(tomorrow)) // Dodana provjera
+                .filter(ep -> ep.getEvent().getEventStart() != null &&
+                        ep.getEvent().getEventStart().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().isEqual(tomorrow)) // Dodana provjera
                 .collect(Collectors.toList());
 
         if (participationsForTomorrow.isEmpty()) {
@@ -52,7 +52,7 @@ public class EventReminderScheduler {
 
                 String volunteerName = volunteer.getFirstName() + " " + volunteer.getLastName();
                 String eventTitle = event.getTitle();
-                String eventDate = event.getEventDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().format(DATE_FORMATTER);
+                String eventDate = event.getEventStart().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().format(DATE_FORMATTER);
                 String eventLocation = event.getLocation();
                 String volunteerEmail = volunteer.getEmail();
 

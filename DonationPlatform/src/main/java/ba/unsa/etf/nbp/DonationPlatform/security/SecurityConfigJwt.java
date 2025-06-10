@@ -52,6 +52,8 @@ public class SecurityConfigJwt {
                         .requestMatchers("/api/users/**").permitAll()
                         .requestMatchers("/api/reports/**").permitAll()
                         .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/api/volunteers/count/**").permitAll()
+                        .requestMatchers("/api/volunteers/**").hasAnyRole("DONATOR", "VOLONTER")
                         .requestMatchers("/api/address/**").permitAll()
                         .requestMatchers("/reports/user/**").hasAnyRole("ADMIN","VOLONTER","DONATOR")
                         .requestMatchers(GET,"/api/users/users").hasRole("ADMIN")

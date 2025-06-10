@@ -1,5 +1,6 @@
 package ba.unsa.etf.nbp.DonationPlatform.service;
 
+import ba.unsa.etf.nbp.DonationPlatform.dto.UserDTO;
 import ba.unsa.etf.nbp.DonationPlatform.dto.VolunteerShiftDTO;
 import ba.unsa.etf.nbp.DonationPlatform.enums.RoleName;
 import ba.unsa.etf.nbp.DonationPlatform.mapper.VolunteerShiftMapper;
@@ -14,10 +15,10 @@ import ba.unsa.etf.nbp.DonationPlatform.repository.VolunteerRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class VolunteerService {
@@ -31,6 +32,8 @@ public class VolunteerService {
     private RoleRepository roleRepository;
 
     private final VolunteerShiftMapper vShiftMapper;
+    @Autowired
+    private UserService userService;
 
     @Autowired
     public VolunteerService(VolunteerShiftMapper mapper) {
@@ -38,10 +41,10 @@ public class VolunteerService {
         this.vShiftMapper = mapper;
     }
 
-    public VolunteerShift registerVolunteer(VolunteerShiftDTO shiftDTO) {
+    public VolunteerShift registerVolunteer(VolunteerShiftDTO shiftDTO, String userEmail) {
         Role newRole = roleRepository.findByName(RoleName.VOLONTER.name())
                 .orElseThrow(() -> new RuntimeException("Role not found"));
-        User user = userRepository.findById(shiftDTO.getUserId())
+        User user = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
         Event event = eventRepository.findById(shiftDTO.getEventId())
                 .orElseThrow(() -> new EntityNotFoundException("Event not found"));
@@ -83,7 +86,18 @@ public class VolunteerService {
         volunteerRepository.save(shift);
         return vShiftMapper.toDTO(shift);
     }
-    public List<VolunteerShift> getUserShifts(Long userId) {
-        return volunteerRepository.findByUserId(userId);
+    public long countVolunteersByEventId(Long eventId) {
+        // Implementiraj logiku, npr. koristi repository da izbrojiš volontere
+        return volunteerRepository.findByEventId(eventId).size();
+    }
+
+    public List<VolunteerShift> getUserShifts(String userEmail) {
+        Optional<User> currentUser = userRepository.findByEmail(userEmail);
+        if(currentUser.isPresent()) {
+            return volunteerRepository.findByUser_Id(currentUser.get().getId());
+        }
+        else {
+            throw new EntityNotFoundException("User not found");
+        }
     }
 }
