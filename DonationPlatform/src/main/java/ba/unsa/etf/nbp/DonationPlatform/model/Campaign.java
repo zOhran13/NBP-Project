@@ -34,4 +34,8 @@ public class Campaign {
     public Campaign() {
 
     }
+
+    public String getImageLink() {
+        return "";
+    }
 }
