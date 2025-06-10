@@ -4,7 +4,6 @@
 }
 
 .hero {
-  height: 400px;
   background-size: cover;
   background-position: center;
   position: relative;
@@ -44,10 +43,40 @@
 }
 
 .mainContent {
+  display: flex;
+  flex-direction: row;
+  gap: 2rem;
+  width: 100%;
+  background: none;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.donationContent {
   background: white;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem; 
+}
+
+
+.leftColumn {
+  width: 50vw; /* 50% širine viewporta */
+
+  flex-shrink: 0;
+  flex-grow: 0;  
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  overflow: hidden;
+}
+
+
+.rightColumn {
+  flex: 1;
 }
 
 .description {
@@ -251,6 +280,7 @@
 
   .mainContent {
     padding: 1.5rem;
+    flex: 1;
   }
 
   .progressSection {
@@ -259,5 +289,12 @@
 
   .donationForm {
     margin: 1rem;
+  }
+}
+
+@media (max-width: 800px) {
+  .mainContent {
+    flex-direction: column;
+    gap: 1rem;
   }
 } 
