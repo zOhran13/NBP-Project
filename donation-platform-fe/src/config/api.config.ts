@@ -13,7 +13,10 @@ export const API_CONFIG = {
     },
     VOLUNTEER: {
       POSITIONS: '/volunteer/positions',
-      APPLY: '/volunteer/apply'
+      APPLY: '/volunteer/apply',
+      REGISTER: '/volunteers/register',
+      COUNT: (eventId: number) => `/volunteers/count/${eventId}`,
+      USER_SHIFTS: '/volunteers/user/shifts'
     },
     PROGRAMS: {
       BASE: '/programs',
