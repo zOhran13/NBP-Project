@@ -3,6 +3,7 @@ package ba.unsa.etf.nbp.DonationPlatform.model;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.security.Timestamp;
 import java.util.Date;
 
 @Entity
@@ -16,16 +17,18 @@ public class Event {
 
     private String title;
     private String imageLink;
-    private Date eventDate;
+    private Date eventStart;
+    private Date eventEnd;
     private String location;
     private String description;
     private Long volunteerGoal;
     private Double donationGoal;
 
-    public Event(String title, String imageLink, Date eventDate, String location, String description, Long volunteerGoal, Double donationGoal) {
+    public Event(String title, String imageLink, Date eventStart, Date eventEnd, String location, String description, Long volunteerGoal, Double donationGoal) {
         this.title = title;
         this.imageLink = imageLink;
-        this.eventDate = eventDate;
+        this.eventStart = eventStart;
+        this.eventEnd = eventEnd;
         this.location = location;
         this.description = description;
         this.volunteerGoal = volunteerGoal;

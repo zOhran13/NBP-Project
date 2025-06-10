@@ -17,10 +17,6 @@ public class VolunteerShiftMapper {
         dto.setShiftEnd(shift.getShiftEnd());
         dto.setHoursWorked(shift.getHoursWorked());
 
-        if (shift.getUser() != null) {
-            dto.setUserId(shift.getUser().getId());
-        }
-
         if (shift.getEvent() != null) {
             dto.setEventId(shift.getEvent().getId());
         }
