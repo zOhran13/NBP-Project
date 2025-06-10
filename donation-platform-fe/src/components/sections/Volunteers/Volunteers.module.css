@@ -32,10 +32,10 @@
 }
 
 .title {
-  font-size: 2.5rem;
-  color: var(--color-primary-main);
+  font-size: 2rem;
+  color: #333;
   margin-bottom: 2rem;
-  text-align: left;
+  text-align: center;
 }
 
 .subtitle {
@@ -47,27 +47,140 @@
 }
 
 .volunteersContainer {
-  max-width: 1200px;
+  padding: 1rem;
+  max-width: 1400px;
   margin: 0 auto;
-  padding: 2rem 1rem;
-}
-
-.loading, .error {
-  text-align: center;
-  color: var(--color-primary-main);
-  font-size: 1.2rem;
-  margin: 2rem 0;
 }
 
 .grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 2rem;
+  padding: 1rem;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease-in-out;
+  height: 100%;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.image {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.cardContent {
+  display: flex;
+  flex-direction: column;
+  padding: 1.25rem;
+  flex: 1;
+}
+
+.cardTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 1rem;
+}
+
+.dateLocation {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  color: #666;
+  font-size: 0.9rem;
+  background-color: #f8f9fa;
+  padding: 0.75rem;
+  border-radius: 8px;
+}
+
+.dateTime, .locationContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.dateLabel, .locationLabel {
+  font-weight: 600;
+  color: #444;
+  font-size: 0.85rem;
+}
+
+.dateValue, .locationValue {
+  color: #555;
+  font-size: 0.9rem;
+}
+
+.location {
+  font-weight: 500;
+  color: #444;
+}
+
+.description {
+  color: #666;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin-bottom: 1rem;
+  flex: 1;
+}
+
+.goals {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.applyButton {
+  margin-top: auto;
+  background-color: var(--color-primary-main);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  width: 100%;
+}
+
+.applyButton:hover {
+  background-color: var(--color-primary-dark);
+}
+
+.loading {
+  text-align: center;
+  padding: 2rem;
+  font-size: 1.1rem;
+  color: #666;
+}
+
+.error {
+  color: #dc3545;
+  text-align: center;
+  padding: 1rem;
+  background-color: #f8d7da;
+  border-radius: 6px;
+  margin: 1rem 0;
 }
 
 @media (max-width: 900px) {
   .grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   }
 }
 
@@ -84,140 +197,6 @@
   }
 }
 
-.card {
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 20px rgba(0,0,0,0.13);
-}
-
-.image {
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
-  border-top-left-radius: 12px;
-  border-top-right-radius: 12px;
-}
-
-.cardContent {
-  padding: 1.5rem 1.25rem 1.25rem 1.25rem;
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-}
-
-.cardTitle {
-  font-size: 1.3rem;
-  color: var(--color-primary-main);
-  margin-bottom: 0.5rem;
-  font-weight: 700;
-}
-
-.dateLocation {
-  color: #388E3C;
-  font-size: 1rem;
-  margin-bottom: 0.75rem;
-}
-
-.description {
-  color: #444;
-  font-size: 1.05rem;
-  margin-bottom: 1rem;
-  flex: 1;
-}
-
-.goals {
-  display: flex;
-  gap: 1.5rem;
-  font-size: 1rem;
-  color: #256029;
-  font-weight: 500;
-}
-
-.location {
-  position: absolute;
-  bottom: 1rem;
-  left: 1rem;
-  background: rgba(255, 255, 255, 0.9);
-  padding: 0.5rem 1rem;
-  border-radius: 20px;
-  font-size: 0.875rem;
-  color: var(--color-primary-main);
-  font-weight: 500;
-  backdrop-filter: blur(4px);
-}
-
-.dot {
-  margin: 0 0.5rem;
-  opacity: 0.6;
-}
-
-.requirements {
-  margin-top: auto;
-  padding-top: 1.5rem;
-  border-top: 1px solid rgba(0, 0, 0, 0.1);
-}
-
-.requirementsTitle {
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--color-primary-main);
-  margin-bottom: 1rem;
-  text-align: left;
-}
-
-.requirementsList {
-  list-style: none;
-  padding: 0;
-  margin: 0 0 1.5rem;
-  text-align: left;
-}
-
-.requirementItem {
-  position: relative;
-  padding-left: 1.5rem;
-  margin-bottom: 0.5rem;
-  font-size: 0.875rem;
-  color: var(--color-text-secondary);
-  line-height: 1.5;
-}
-
-.requirementItem::before {
-  content: "✓";
-  position: absolute;
-  left: 0;
-  color: var(--color-primary-main);
-  font-weight: bold;
-}
-
-.applyButton {
-  width: 100%;
-  padding: 0.75rem 1.5rem;
-  font-size: 1rem;
-  font-weight: 600;
-  color: white;
-  background-color: var(--color-primary-main);
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  margin-top: 1rem;
-  transition: all 0.3s ease;
-}
-
-.applyButton:hover {
-  background-color: var(--color-primary-dark);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
 @media (max-width: 480px) {
   .imageWrapper {
     height: 180px;
@@ -227,4 +206,29 @@
     font-size: 0.75rem;
     padding: 0.4rem 0.8rem;
   }
+}
+
+.volunteerProgress {
+  margin: 1rem 0;
+}
+
+.progressBar {
+  width: 100%;
+  height: 8px;
+  background-color: #e9ecef;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+}
+
+.progressFill {
+  height: 100%;
+  background-color: var(--color-primary-main);
+  transition: width 0.3s ease;
+}
+
+.progressText {
+  font-size: 0.9rem;
+  color: #666;
+  text-align: center;
 } 
