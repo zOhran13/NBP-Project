@@ -17,6 +17,7 @@ import { Profile } from './pages/Profile/Profile';
 import { Login } from './components/auth/Login/Login';
 import { Signup } from './components/auth/Signup/Signup';
 import CreateCampaign from './pages/CreateCampaign/CreateCampaign';
+import { OrganizationDashboard } from './pages/OrganizationDashboard/OrganizationDashboard';
 import './App.css';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -48,6 +49,7 @@ function App() {
             <Route path="/profile" element={<Profile />} />
             <Route path="/programi" element={<ProgramsPage />} />
             <Route path="/create-campaign" element={<CreateCampaign />} />
+            <Route path="/organization-dashboard" element={<OrganizationDashboard />} />
           </Routes>
         </main>
         <Footer />

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { login } from '../../../services/auth.service';
 import styles from './Login.module.css';
+import { jwtDecode } from 'jwt-decode';
 
 export const Login: React.FC = () => {
   const navigate = useNavigate();
@@ -14,6 +15,19 @@ export const Login: React.FC = () => {
 
     try {
       const data = await login({ email, password });
+      console.log('Login response:', data);
+      let token = data?.accessToken || localStorage.getItem('token');
+      if (token && typeof token === 'string') {
+        localStorage.setItem('token', token);
+        const decoded: any = jwtDecode(token);
+        if (decoded.role === 'Admin') {
+          navigate('/organization-dashboard');
+          return;
+        }
+      } else {
+        setError('Neispravan token sa servera.');
+        return;
+      }
       navigate('/');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Došlo je do greške. Pokušajte ponovo.');
