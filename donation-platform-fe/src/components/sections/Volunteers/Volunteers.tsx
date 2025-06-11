@@ -14,6 +14,7 @@ interface Event {
   description: string;
   volunteerGoal: number;
   donationGoal: number;
+
 }
 
 interface EventWithVolunteerCount extends Event {
@@ -21,6 +22,7 @@ interface EventWithVolunteerCount extends Event {
 }
 
 export const Volunteers: React.FC = () => {
+
   const navigate = useNavigate();
   const [events, setEvents] = useState<EventWithVolunteerCount[]>([]);
   const [userShifts, setUserShifts] = useState<VolunteerShift[]>([]);
@@ -206,3 +208,4 @@ export const Volunteers: React.FC = () => {
     </div>
   );
 }; 
+
