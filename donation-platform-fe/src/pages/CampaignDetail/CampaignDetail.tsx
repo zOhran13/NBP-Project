@@ -2,7 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getCampaigns, getCampaignDonatedAmount, Campaign } from '../../services/campaign.service';
 import styles from './CampaignDetail.module.css';
-
+import { createDonation, DonationDTO } from '../../services/donation.service';
+import { jwtDecode } from 'jwt-decode';
+import Cookies from 'js-cookie';
 const CampaignDetail: React.FC = () => {
 	const { id } = useParams<{ id: string }>();
 	const navigate = useNavigate();
@@ -12,7 +14,7 @@ const CampaignDetail: React.FC = () => {
 	const [error, setError] = useState<string | null>(null);
 	const [donationAmount, setDonationAmount] = useState<string>('');
 	const [showDonationForm, setShowDonationForm] = useState(false);
-
+	const [isSubmitting, setIsSubmitting] = useState(false);
 	useEffect(() => {
 		const fetchCampaign = async () => {
 			try {
@@ -37,13 +39,45 @@ const CampaignDetail: React.FC = () => {
 		fetchCampaign();
 	}, [id]);
 
-	const handleDonationSubmit = (e: React.FormEvent) => {
+	const handleDonationSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
-		// Here you would typically handle the donation submission
-		// For now, we'll just show an alert
-		alert(`Thank you for your donation of ${donationAmount} KM!`);
-		setShowDonationForm(false);
-		setDonationAmount('');
+		if (!campaign || !donationAmount) return;
+
+		setIsSubmitting(true);
+		try {
+			const token = Cookies.get('accessToken');
+			if (!token) {
+				alert('Please login to make a donation');
+				navigate('/login');
+				return;
+			}
+
+			const decoded: any = jwtDecode(token);
+			const userId = decoded.sub;
+
+			const donationDTO: DonationDTO = {
+				amount: parseFloat(donationAmount),
+				campaignId: campaign.id,
+				userId: userId,
+				donationDate: new Date(),
+			};
+
+			await createDonation(donationDTO);
+
+			// Refresh the donated amount
+			const newAmount = await getCampaignDonatedAmount(campaign.id);
+			setDonatedAmount(newAmount);
+
+			// Show success message and close form
+			alert(`Thank you for your donation of ${donationAmount} KM!`);
+			setShowDonationForm(false);
+			setDonationAmount('');
+		} catch (error) {
+			console.error('Error creating donation:', error);
+			alert('Failed to process donation. Please try again.');
+		} finally {
+			setIsSubmitting(false);
+		}
 	};
 
 	if (loading) {
