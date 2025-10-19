@@ -1,4 +1,4 @@
-# 🎗️ Charity Platform
+# Charity Platform
 
 **Nonprofit Donation and Volunteer Management System**
 
@@ -7,7 +7,7 @@ Developed as part of the *Napredne baze podataka* course at the University of Sa
 
 ---
 
-## 🚀 Features
+##  Features
 - Create and manage charity campaigns and events  
 - Track donations and volunteer participation  
 - Generate PDF reports for users and campaigns  
@@ -17,7 +17,7 @@ Developed as part of the *Napredne baze podataka* course at the University of Sa
 
 ---
 
-## 🛠️ Tech Stack
+##  Tech Stack
 - **Backend:** Spring Boot (Java)  
 - **Database:** Oracle SQL  
 - **Frontend:** React.js  
